@@ -11,7 +11,7 @@ beforeEach(() => {
     pitDataController = new PitDataController(pitDataService);
 });
 
-test("getAllPitData returns all pit data", async () => {
+test("findAll returns all pit data", async () => {
     const result: PitData[] = [
         { gold: 1, level: 1, player_uuid: "abc", prestige: 0, xp: 184 },
         { gold: 25, level: 5, player_uuid: "alobij", prestige: 21, xp: 349 },
@@ -23,4 +23,36 @@ test("getAllPitData returns all pit data", async () => {
     );
 
     expect(await pitDataController.getPitData()).toBe(result);
+});
+
+test("findOne returns one player from a uuid", async () => {
+    const result: PitData = {
+        gold: 25,
+        level: 5,
+        player_uuid: "1234",
+        prestige: 21,
+        xp: 349,
+    };
+
+    jest.spyOn(pitDataService, "findOne").mockImplementation(
+        async () => result,
+    );
+
+    expect(await pitDataController.getPitDataFromUuid("1234")).toBe(result);
+});
+
+test("create initializes pit data for a player", async () => {
+    const result = {
+        gold: 0,
+        level: 1,
+        prestige: 0,
+        player_uuid: "1234",
+        xp: 1,
+    };
+
+    jest.spyOn(pitDataService, "create").mockImplementation(async () => result);
+
+    expect(await pitDataController.createPitData({ playerUuid: "1234" })).toBe(
+        result,
+    );
 });

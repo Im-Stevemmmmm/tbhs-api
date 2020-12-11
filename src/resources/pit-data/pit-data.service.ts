@@ -14,7 +14,9 @@ export class PitDataService {
         return await this.prisma.pitData.findUnique({ where });
     }
 
-    async create(data: Prisma.PitDataCreateInput): Promise<PitData> {
-        return await this.prisma.pitData.create({ data });
+    async create(playerUuid: string): Promise<PitData> {
+        return await this.prisma.pitData.create({
+            data: { Player: { connect: { uuid: playerUuid } } },
+        });
     }
 }

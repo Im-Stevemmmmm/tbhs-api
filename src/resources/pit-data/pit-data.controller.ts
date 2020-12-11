@@ -30,14 +30,8 @@ export class PitDataController {
     async createPitData(
         @Body() createPitDataDto: CreatePitDataDto,
     ): Promise<PitDataModel> {
-        const { gold, level, prestige, uuid, xp } = createPitDataDto;
+        const { playerUuid } = createPitDataDto;
 
-        return await this.pitDataService.create({
-            Player: { connect: { uuid } },
-            gold,
-            xp,
-            level,
-            prestige,
-        });
+        return await this.pitDataService.create(playerUuid);
     }
 }
