@@ -1,6 +1,14 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Get,
+    HttpException,
+    HttpStatus,
+    Param,
+    Post,
+} from "@nestjs/common";
 import { Player as PlayerModel } from "@prisma/client";
-import { RegisterPlayerDto } from "./dtos/register-player";
+import { RegisterPlayerDto } from "./dtos/register-player.dto";
 import { PlayersService } from "./players.service";
 
 @Controller("players")
@@ -9,12 +17,26 @@ export class PlayersController {
 
     @Get()
     async getPlayers(): Promise<PlayerModel[]> {
-        return this.playersService.players();
+        return await this.playersService.players();
     }
 
     @Get("/:uuid")
     async getPlayerByUuid(@Param("uuid") uuid: string): Promise<PlayerModel> {
-        return this.playersService.player({ uuid });
+        const player = await this.playersService.player({ uuid });
+
+        if (!player) {
+            const status = HttpStatus.NOT_FOUND;
+
+            throw new HttpException(
+                {
+                    status,
+                    error: "Player does not exist.",
+                },
+                status,
+            );
+        }
+
+        return player;
     }
 
     @Post()
@@ -23,7 +45,7 @@ export class PlayersController {
     ): Promise<PlayerModel> {
         const { uuid } = data;
 
-        return this.playersService.createPlayer({
+        return await this.playersService.createPlayer({
             uuid,
             rank: "noob",
         });
