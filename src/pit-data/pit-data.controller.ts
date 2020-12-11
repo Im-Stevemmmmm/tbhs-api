@@ -1,11 +1,14 @@
 import {
+    Body,
     Controller,
     Get,
     HttpException,
     HttpStatus,
     Param,
+    Post,
 } from "@nestjs/common";
 import { PitData as PitDataModel } from "@prisma/client";
+import { CreatePitDataDto } from "./dtos/create-pit-data.dto";
 import { PitDataService } from "./pit-data.service";
 
 @Controller("game-data/the-pit")
@@ -38,5 +41,20 @@ export class PitDataController {
         }
 
         return pitData;
+    }
+
+    @Post()
+    async createPitData(
+        @Body() createPitDataDto: CreatePitDataDto,
+    ): Promise<PitDataModel> {
+        const { gold, level, prestige, uuid, xp } = createPitDataDto;
+
+        return await this.pitDataService.createPitData({
+            Player: { connect: { uuid } },
+            gold,
+            xp,
+            level,
+            prestige,
+        });
     }
 }
