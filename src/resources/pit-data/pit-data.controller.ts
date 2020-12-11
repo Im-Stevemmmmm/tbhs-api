@@ -10,14 +10,14 @@ export class PitDataController {
 
     @Get()
     async getPitData(): Promise<PitDataModel[]> {
-        return await this.pitDataService.getAllPitData();
+        return await this.pitDataService.findAll();
     }
 
     @Get("/:uuid")
     async getPitDataFromUuid(
         @Param("uuid") player_uuid: string,
     ): Promise<PitDataModel> {
-        const pitData = await this.pitDataService.getPitDataFromPlayer({
+        const pitData = await this.pitDataService.findOne({
             player_uuid,
         });
 
@@ -32,7 +32,7 @@ export class PitDataController {
     ): Promise<PitDataModel> {
         const { gold, level, prestige, uuid, xp } = createPitDataDto;
 
-        return await this.pitDataService.createPitData({
+        return await this.pitDataService.create({
             Player: { connect: { uuid } },
             gold,
             xp,

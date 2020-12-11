@@ -10,12 +10,12 @@ export class PlayersController {
 
     @Get()
     async getPlayers(): Promise<PlayerModel[]> {
-        return await this.playersService.players();
+        return await this.playersService.findAll();
     }
 
     @Get("/:uuid")
     async getPlayerByUuid(@Param("uuid") uuid: string): Promise<PlayerModel> {
-        const player = await this.playersService.player({ uuid });
+        const player = await this.playersService.findOne({ uuid });
 
         if (!player) throw new PlayerNotFoundException();
 
@@ -28,7 +28,7 @@ export class PlayersController {
     ): Promise<PlayerModel> {
         const { uuid } = data;
 
-        return await this.playersService.createPlayer({
+        return await this.playersService.create({
             uuid,
             rank: "noob",
         });

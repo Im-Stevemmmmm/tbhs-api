@@ -6,19 +6,19 @@ import { PrismaService } from "../prisma/prisma.service";
 export class PlayersService {
     constructor(private prisma: PrismaService) {}
 
-    async player(where: Prisma.PlayerWhereUniqueInput): Promise<Player> {
-        return this.prisma.player.findUnique({ where });
-    }
-
-    async players(): Promise<Player[]> {
+    async findAll(): Promise<Player[]> {
         return await this.prisma.player.findMany();
     }
 
-    async createPlayer(data: Prisma.PlayerCreateInput): Promise<Player> {
+    async findOne(where: Prisma.PlayerWhereUniqueInput): Promise<Player> {
+        return this.prisma.player.findUnique({ where });
+    }
+
+    async create(data: Prisma.PlayerCreateInput): Promise<Player> {
         return await this.prisma.player.create({ data });
     }
 
-    async updatePlayer(params: {
+    async update(params: {
         where: Prisma.PlayerWhereUniqueInput;
         data: Prisma.PlayerUpdateInput;
     }): Promise<Player> {
@@ -27,7 +27,7 @@ export class PlayersService {
         return await this.prisma.player.update({ where, data });
     }
 
-    async deletePlayer(where: Prisma.PlayerWhereUniqueInput): Promise<Player> {
+    async delete(where: Prisma.PlayerWhereUniqueInput): Promise<Player> {
         return await this.prisma.player.delete({ where });
     }
 }

@@ -6,17 +6,15 @@ import { PrismaService } from "../prisma/prisma.service";
 export class PitDataService {
     constructor(private readonly prisma: PrismaService) {}
 
-    async getAllPitData(): Promise<PitData[]> {
+    async findAll(): Promise<PitData[]> {
         return await this.prisma.pitData.findMany();
     }
 
-    async getPitDataFromPlayer(
-        where: Prisma.PitDataWhereUniqueInput,
-    ): Promise<PitData> {
+    async findOne(where: Prisma.PitDataWhereUniqueInput): Promise<PitData> {
         return await this.prisma.pitData.findUnique({ where });
     }
 
-    async createPitData(data: Prisma.PitDataCreateInput): Promise<PitData> {
+    async create(data: Prisma.PitDataCreateInput): Promise<PitData> {
         return await this.prisma.pitData.create({ data });
     }
 }
