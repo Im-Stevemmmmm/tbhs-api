@@ -1,13 +1,13 @@
 generator client {
-  provider = "prisma-client-js"
+    provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+    provider = "mysql"
+    url      = env("DATABASE_URL")
 }
 
 model Player {
-  uuid String @id
-  rank String @default("noob")
+    uuid String @id
+    rank String @default("noob")
 }
