@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
-import { PitDataService } from "./pit-data.service";
+import { PrismaService } from "src/prisma/prisma.service";
 import { PitDataController } from "./pit-data.controller";
+import { PitDataService } from "./pit-data.service";
 
 @Module({
     controllers: [PitDataController],
-    providers: [PitDataService],
+    providers: [PitDataService, PrismaService],
 })
 export class PitDataModule {}

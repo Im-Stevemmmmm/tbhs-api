@@ -6,6 +6,10 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class PitDataService {
     constructor(private readonly prisma: PrismaService) {}
 
+    async getAllPitData(): Promise<PitData[]> {
+        return this.prisma.pitData.findMany();
+    }
+
     async getPitDataFromPlayer(
         where: Prisma.PitDataWhereUniqueInput,
     ): Promise<PitData> {
