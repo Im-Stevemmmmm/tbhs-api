@@ -1,42 +1,18 @@
-import {
-    Controller,
-    Get,
-    Post,
-    Body,
-    Put,
-    Param,
-    Delete,
-} from "@nestjs/common";
+import { Controller, Get, Param } from "@nestjs/common";
+import { Player as PlayerModel } from "@prisma/client";
 import { PlayersService } from "./players.service";
-import { CreatePlayerDto } from "./dto/create-player.dto";
-import { UpdatePlayerDto } from "./dto/update-player.dto";
 
 @Controller("players")
 export class PlayersController {
     constructor(private readonly playersService: PlayersService) {}
 
-    @Post()
-    create(@Body() createPlayerDto: CreatePlayerDto) {
-        return this.playersService.create(createPlayerDto);
-    }
-
     @Get()
-    findAll() {
-        return this.playersService.findAll();
+    async getPlayers(): Promise<PlayerModel[]> {
+        return this.playersService.players();
     }
 
-    @Get(":id")
-    findOne(@Param("id") id: string) {
-        return this.playersService.findOne(+id);
-    }
-
-    @Put(":id")
-    update(@Param("id") id: string, @Body() updatePlayerDto: UpdatePlayerDto) {
-        return this.playersService.update(+id, updatePlayerDto);
-    }
-
-    @Delete(":id")
-    remove(@Param("id") id: string) {
-        return this.playersService.remove(+id);
+    @Get("/:uuid")
+    async getPlayerByUuid(@Param("uuid") uuid: string): Promise<PlayerModel> {
+        return this.playersService.player({ uuid });
     }
 }
