@@ -26,8 +26,4 @@ export class PlayersService {
 
         return await this.prisma.player.update({ where, data });
     }
-
-    async delete(where: Prisma.PlayerWhereUniqueInput): Promise<Player> {
-        return await this.prisma.player.delete({ where });
-    }
 }
