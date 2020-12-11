@@ -15,10 +15,10 @@ export class PitDataController {
 
     @Get("/:uuid")
     async getPitDataFromUuid(
-        @Param("uuid") player_uuid: string,
+        @Param("uuid") playerUuid: string,
     ): Promise<PitDataModel> {
         const pitData = await this.pitDataService.findOne({
-            player_uuid,
+            player_uuid: playerUuid,
         });
 
         if (!pitData) throw new PlayerNotFoundException();
