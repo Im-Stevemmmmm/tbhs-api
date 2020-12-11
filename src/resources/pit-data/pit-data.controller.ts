@@ -1,13 +1,6 @@
-import {
-    Body,
-    Controller,
-    Get,
-    HttpException,
-    HttpStatus,
-    Param,
-    Post,
-} from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { PitData as PitDataModel } from "@prisma/client";
+import { PlayerNotFoundException } from "src/exceptions/player-not-found.exception";
 import { CreatePitDataDto } from "./dtos/create-pit-data.dto";
 import { PitDataService } from "./pit-data.service";
 
@@ -28,17 +21,7 @@ export class PitDataController {
             player_uuid,
         });
 
-        if (!pitData) {
-            const status = HttpStatus.NOT_FOUND;
-
-            throw new HttpException(
-                {
-                    status,
-                    error: "Player does not exist.",
-                },
-                status,
-            );
-        }
+        if (!pitData) throw new PlayerNotFoundException();
 
         return pitData;
     }
