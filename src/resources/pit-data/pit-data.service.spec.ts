@@ -3,15 +3,10 @@ import { PrismaService } from "../prisma/prisma.service";
 import { PitDataController } from "./pit-data.controller";
 import { PitDataService } from "./pit-data.service";
 
-let pitDataController: PitDataController;
-let pitDataService: PitDataService;
-
-beforeEach(() => {
-    pitDataService = new PitDataService(new PrismaService());
-    pitDataController = new PitDataController(pitDataService);
-});
-
 test("findAll returns all pit data", async () => {
+    const pitDataService = new PitDataService(new PrismaService());
+    const pitDataController = new PitDataController(pitDataService);
+
     const result: PitData[] = [
         { gold: 1, level: 1, player_uuid: "abc", prestige: 0, xp: 184 },
         { gold: 25, level: 5, player_uuid: "alobij", prestige: 21, xp: 349 },
@@ -26,6 +21,9 @@ test("findAll returns all pit data", async () => {
 });
 
 test("findOne returns one player from a uuid", async () => {
+    const pitDataService = new PitDataService(new PrismaService());
+    const pitDataController = new PitDataController(pitDataService);
+
     const result: PitData = {
         gold: 25,
         level: 5,
@@ -42,6 +40,9 @@ test("findOne returns one player from a uuid", async () => {
 });
 
 test("create initializes pit data for a player", async () => {
+    const pitDataService = new PitDataService(new PrismaService());
+    const pitDataController = new PitDataController(pitDataService);
+
     const result = {
         gold: 0,
         level: 1,
