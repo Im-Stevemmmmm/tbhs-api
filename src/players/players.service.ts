@@ -1,26 +1,29 @@
 import { Injectable } from "@nestjs/common";
-import { CreatePlayerDto } from "./dto/create-player.dto";
-import { UpdatePlayerDto } from "./dto/update-player.dto";
+import { Player, Prisma } from "@prisma/client";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class PlayersService {
-    create(createPlayerDto: CreatePlayerDto) {
-        return "This action adds a new player";
+    constructor(private prisma: PrismaService) {}
+
+    async players(): Promise<Player[]> {
+        return await this.prisma.player.findMany();
     }
 
-    findAll() {
-        return `This action returns all players`;
+    async createPlayer(data: Prisma.PlayerCreateInput): Promise<Player> {
+        return await this.prisma.player.create({ data });
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} player`;
+    async updatePlayer(params: {
+        where: Prisma.PlayerWhereUniqueInput;
+        data: Prisma.PlayerUpdateInput;
+    }): Promise<Player> {
+        const { where, data } = params;
+
+        return await this.prisma.player.update({ where, data });
     }
 
-    update(id: number, updatePlayerDto: UpdatePlayerDto) {
-        return `This action updates a #${id} player`;
-    }
-
-    remove(id: number) {
-        return `This action removes a #${id} player`;
+    async deletePlayer(where: Prisma.PlayerWhereUniqueInput): Promise<Player> {
+        return await this.prisma.player.delete({ where });
     }
 }
