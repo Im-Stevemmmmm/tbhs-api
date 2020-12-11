@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
-import { PlayersModule } from "./players/players.module";
-import { PitDataModule } from './pit-data/pit-data.module';
+import { PitDataModule } from "./resources/pit-data/pit-data.module";
+import { PlayersModule } from "./resources/players/players.module";
 
 @Module({
     imports: [PlayersModule, PitDataModule],
