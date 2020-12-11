@@ -8,6 +8,16 @@ datasource db {
 }
 
 model Player {
-    uuid String @id
-    rank String @default("noob")
+    uuid    String   @id
+    rank    String   @default("noob")
+    PitData PitData?
+}
+
+model PitData {
+    player_uuid String @id
+    prestige    Int    @default(0)
+    level       Int    @default(1)
+    xp          Int
+    gold        Int
+    Player      Player @relation(fields: [player_uuid], references: [uuid])
 }
