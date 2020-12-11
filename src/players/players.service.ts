@@ -6,6 +6,10 @@ import { PrismaService } from "src/prisma/prisma.service";
 export class PlayersService {
     constructor(private prisma: PrismaService) {}
 
+    async player(where: Prisma.PlayerWhereUniqueInput): Promise<Player> {
+        return this.prisma.player.findUnique({ where });
+    }
+
     async players(): Promise<Player[]> {
         return await this.prisma.player.findMany();
     }
