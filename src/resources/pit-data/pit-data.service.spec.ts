@@ -20,7 +20,7 @@ test("findAll returns all pit data", async () => {
     expect(await pitDataController.getPitData()).toBe(result);
 });
 
-test("findOne returns one player from a uuid", async () => {
+test("findOne returns pit data for a player", async () => {
     const pitDataService = new PitDataService(new PrismaService());
     const pitDataController = new PitDataController(pitDataService);
 
@@ -39,7 +39,7 @@ test("findOne returns one player from a uuid", async () => {
     expect(await pitDataController.getPitDataFromUuid("1234")).toBe(result);
 });
 
-test("create initializes pit data for a player", async () => {
+test("create returns default pit data for a player", async () => {
     const pitDataService = new PitDataService(new PrismaService());
     const pitDataController = new PitDataController(pitDataService);
 
