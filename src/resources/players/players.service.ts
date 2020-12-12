@@ -4,7 +4,7 @@ import { PrismaService } from "../prisma/prisma.service";
 
 @Injectable()
 export class PlayersService {
-    constructor(private prisma: PrismaService) {}
+    constructor(private readonly prisma: PrismaService) {}
 
     async findAll(): Promise<Player[]> {
         return await this.prisma.player.findMany();
