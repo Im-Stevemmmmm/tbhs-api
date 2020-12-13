@@ -1,5 +1,18 @@
 {
+    "tabWidth": 4,
+    "jsxBracketSameLine": true,
     "singleQuote": false,
-    "trailingComma": "all",
-    "tabWidth": 4
+    "arrowParens": "avoid",
+    "jsxSingleQuote": false,
+    "bracketSpacing": true,
+    "htmlWhitespaceSensitivity": "css",
+    "trailingComma": "es5",
+    "semi": true,
+    "cursorOffset": -1,
+    "embeddedLanguageFormatting": "auto",
+    "useTabs": false,
+    "endOfLine": "lf",
+    "filepath": "",
+    "insertPragma": false,
+    "overrides": []
 }
