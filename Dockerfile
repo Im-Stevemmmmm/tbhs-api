@@ -1,21 +1,20 @@
-FROM node:12
-
-RUN mkdir -p /usr/src/app
-ENV PORT 4000 
+FROM node:12 AS builder
 
 WORKDIR /usr/src/app
 
-RUN yarn global add pm2 --silent
+COPY ./package.json .
+COPY ./yarn.lock .
 
-COPY ./package.json ./
-COPY ./yarn.lock ./
+RUN yarn install
 
-RUN yarn install --production --silent
-
-COPY . /usr/src/app
+COPY . .
 
 RUN yarn build
 
-EXPOSE 4000
+FROM node:12
 
-CMD ["pm2-runtime", "start", "yarn", "--interpreter", "bash", "--name", "web server", "--", "start"]
+WORKDIR /usr/src/app
+
+COPY --from=builder /usr/src/app ./
+
+CMD ["yarn", "start:prod"]
