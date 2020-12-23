@@ -15,7 +15,7 @@ export class PitDataController {
 
     @Get("/:uuid")
     async getPitDataFromUuid(
-        @Param("uuid") playerUuid: string,
+        @Param("uuid") playerUuid: string
     ): Promise<PitDataModel> {
         const pitData = await this.pitDataService.findOne({
             player_uuid: playerUuid,
@@ -28,7 +28,7 @@ export class PitDataController {
 
     @Post()
     async createPitData(
-        @Body() createPitDataDto: CreatePitDataDto,
+        @Body() createPitDataDto: CreatePitDataDto
     ): Promise<PitDataModel> {
         const { playerUuid } = createPitDataDto;
 

@@ -15,7 +15,7 @@ export class ValidateRankPipe implements PipeTransform {
 
             throw new HttpException(
                 { status, error: "Invalid rank. Rank must be noob." },
-                status,
+                status
             );
         }
 

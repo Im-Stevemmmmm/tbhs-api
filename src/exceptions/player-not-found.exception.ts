@@ -9,7 +9,7 @@ export class PlayerNotFoundException extends HttpException {
                 status,
                 error: "Player does not exist.",
             },
-            status,
+            status
         );
     }
 }

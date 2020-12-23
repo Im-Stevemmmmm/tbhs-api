@@ -19,7 +19,7 @@ test("findAll returns all players", async () => {
     ];
 
     jest.spyOn(playersService, "findAll").mockImplementation(
-        async () => result,
+        async () => result
     );
 
     expect(await playersController.getPlayers()).toBe(result);
@@ -35,7 +35,7 @@ test("findOne returns one player from a uuid", async () => {
     };
 
     jest.spyOn(playersService, "findOne").mockImplementation(
-        async () => result,
+        async () => result
     );
 
     expect(await playersController.getPlayerByUuid("1234")).toBe(result);
@@ -53,7 +53,7 @@ test("create returns a new player", async () => {
     jest.spyOn(playersService, "create").mockImplementation(async () => result);
 
     expect(await playersController.registerPlayer({ uuid: "1234" })).toBe(
-        result,
+        result
     );
 });
 

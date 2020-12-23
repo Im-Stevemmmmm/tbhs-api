@@ -14,7 +14,7 @@ test("findAll returns all pit data", async () => {
     ];
 
     jest.spyOn(pitDataService, "findAll").mockImplementation(
-        async () => result,
+        async () => result
     );
 
     expect(await pitDataController.getPitData()).toBe(result);
@@ -33,7 +33,7 @@ test("findOne returns pit data for a player", async () => {
     };
 
     jest.spyOn(pitDataService, "findOne").mockImplementation(
-        async () => result,
+        async () => result
     );
 
     expect(await pitDataController.getPitDataFromUuid("1234")).toBe(result);
@@ -54,6 +54,6 @@ test("create returns default pit data for a player", async () => {
     jest.spyOn(pitDataService, "create").mockImplementation(async () => result);
 
     expect(await pitDataController.createPitData({ playerUuid: "1234" })).toBe(
-        result,
+        result
     );
 });

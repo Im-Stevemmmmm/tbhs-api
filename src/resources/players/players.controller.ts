@@ -24,7 +24,7 @@ export class PlayersController {
 
     @Get("/:uuid")
     async getPlayerByUuid(
-        @Param("uuid", new ParseUUIDPipe(uuidPipeOptions)) uuid: string,
+        @Param("uuid", new ParseUUIDPipe(uuidPipeOptions)) uuid: string
     ): Promise<PlayerModel> {
         const player = await this.playersService.findOne({ uuid });
 
@@ -35,7 +35,7 @@ export class PlayersController {
 
     @Post()
     async registerPlayer(
-        @Body() data: RegisterPlayerDto,
+        @Body() data: RegisterPlayerDto
     ): Promise<PlayerModel> {
         const { uuid } = data;
 
@@ -48,8 +48,8 @@ export class PlayersController {
     @Post("/:uuid/:rank")
     async setPlayerRank(
         @Param("uuid", new ParseUUIDPipe(uuidPipeOptions)) uuid: string,
-        @Param("rank", ValidateRankPipe) rank: string,
-    ) {
+        @Param("rank", ValidateRankPipe) rank: string
+    ): Promise<PlayerModel> {
         return await this.playersService.update({
             where: { uuid },
             data: { rank },
