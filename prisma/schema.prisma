@@ -4,7 +4,7 @@ generator client {
 }
 
 datasource db {
-    provider = "mysql"
+    provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
@@ -16,7 +16,7 @@ model Player {
 
 model PitData {
     player_uuid String @id
-    prestige    Int    @default(0)
+    prestige    Int    @default(1)
     level       Int    @default(1)
     xp          Int    @default(0)
     gold        Int    @default(0)
