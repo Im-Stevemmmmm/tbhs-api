@@ -1,5 +1,5 @@
 import { Player } from "@prisma/client";
-import { PrismaService } from "../prisma/prisma.service";
+import { PrismaService } from "../../resources/prisma/prisma.service";
 import { PlayersController } from "./players.controller";
 import { PlayersService } from "./players.service";
 

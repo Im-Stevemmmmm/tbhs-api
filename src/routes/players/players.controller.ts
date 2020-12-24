@@ -1,16 +1,9 @@
-import {
-    Body,
-    Controller,
-    Get,
-    Param,
-    ParseUUIDPipe,
-    Post,
-} from "@nestjs/common";
+import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { Player as PlayerModel } from "@prisma/client";
 import { PlayerNotFoundException } from "src/exceptions/player-not-found.exception";
-import { uuidPipeOptions } from "src/utils/uuid-pipe-config";
+import { standardUUIDPipe } from "../../utils/standard-uuid-pipe";
 import { RegisterPlayerDto } from "./dtos/register-player.dto";
-import { ValidateRankPipe } from "./pipes/validate-rank.pipe";
+import { UpdatePlayerDto } from "./dtos/update-player.dto";
 import { PlayersService } from "./players.service";
 
 @Controller("players")
@@ -24,7 +17,7 @@ export class PlayersController {
 
     @Get("/:uuid")
     async getPlayerByUuid(
-        @Param("uuid", new ParseUUIDPipe(uuidPipeOptions)) uuid: string
+        @Param("uuid", standardUUIDPipe) uuid: string
     ): Promise<PlayerModel> {
         const player = await this.playersService.findOne({ uuid });
 
@@ -45,14 +38,14 @@ export class PlayersController {
         });
     }
 
-    @Post("/:uuid/:rank")
-    async setPlayerRank(
-        @Param("uuid", new ParseUUIDPipe(uuidPipeOptions)) uuid: string,
-        @Param("rank", ValidateRankPipe) rank: string
+    @Post("/:uuid")
+    async updatePlayer(
+        @Param("uuid", standardUUIDPipe) uuid: string,
+        @Body() updatePlayerDto: UpdatePlayerDto
     ): Promise<PlayerModel> {
         return await this.playersService.update({
             where: { uuid },
-            data: { rank },
+            data: updatePlayerDto,
         });
     }
 }

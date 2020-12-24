@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { PitDataModule } from "./resources/pit-data/pit-data.module";
-import { PlayersModule } from "./resources/players/players.module";
+import { PitOffensiveStatsModule } from "./routes/game-data/the-pit/offensive-stats/offensive-stats.module";
+import { PlayersModule } from "./routes/players/players.module";
 
 @Module({
-    imports: [PlayersModule, PitDataModule],
+    imports: [PlayersModule, PitOffensiveStatsModule],
 })
 export class AppModule {}
