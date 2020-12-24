@@ -16,16 +16,10 @@ export class PitOffensiveStatsService {
         return await this.prisma.pitOffensiveStats.findUnique({ where });
     }
 
-    async create(playerUuid: string): Promise<PitOffensiveStats> {
-        return await this.prisma.pitOffensiveStats.create({
-            data: { player: { connect: { uuid: playerUuid } } },
-        });
-    }
-
     async update(
         where: Prisma.PitOffensiveStatsWhereUniqueInput,
         data: Prisma.PitOffensiveStatsUpdateInput
-    ) {
-        await this.prisma.pitOffensiveStats.update({ where, data });
+    ): Promise<PitOffensiveStats> {
+        return await this.prisma.pitOffensiveStats.update({ where, data });
     }
 }

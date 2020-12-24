@@ -13,7 +13,7 @@ describe("PlayersController", () => {
     });
 
     describe("findAll", () => {
-        it("returns the pit data for all players", async () => {
+        it("returns all players who have logged on", async () => {
             const result: Player[] = [
                 {
                     uuid: "1234",
@@ -33,11 +33,25 @@ describe("PlayersController", () => {
         });
     });
 
-    describe("create", () => {
-        it("returns a new player", async () => {
-            const playersService = new PlayersService(new PrismaService());
-            const playersController = new PlayersController(playersService);
+    describe("findOne", () => {
+        it("finds one player by uuid", async () => {
+            const result: Player = {
+                uuid: "1234",
+                rank: "noob",
+            };
 
+            jest.spyOn(playersService, "findOne").mockImplementation(
+                async () => result
+            );
+
+            expect(await playersController.getPlayerByUuid("1234")).toBe(
+                result
+            );
+        });
+    });
+
+    describe("create", () => {
+        it("creates a new player", async () => {
             const result: Player = {
                 uuid: "1234",
                 rank: "noob",
@@ -54,10 +68,7 @@ describe("PlayersController", () => {
     });
 
     describe("update", () => {
-        it("sets the players rank", async () => {
-            const playersService = new PlayersService(new PrismaService());
-            const playersController = new PlayersController(playersService);
-
+        it("updates the players data", async () => {
             const result: Player = {
                 uuid: "1234",
                 rank: "noob",
@@ -67,9 +78,9 @@ describe("PlayersController", () => {
                 async () => result
             );
 
-            expect(await playersController.setPlayerRank("1234", "noob")).toBe(
-                result
-            );
+            expect(
+                await playersController.updatePlayer("1234", { rank: "noob" })
+            ).toBe(result);
         });
     });
 });

@@ -33,7 +33,7 @@ export class PitOffensiveStatsController {
     }
 
     @Put(":uuid")
-    async update(
+    async updateStats(
         @Param("uuid", standardUUIDPipe) uuid: string,
         @Body() updateOffensiveStatsDto: UpdateOffensiveStatsDto
     ) {
