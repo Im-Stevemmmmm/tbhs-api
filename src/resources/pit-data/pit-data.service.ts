@@ -17,7 +17,7 @@ export class PitDataService {
     async create(playerUuid: string): Promise<PitData> {
         return await this.prisma.pitData.create({
             data: {
-                player: { create: { uuid: playerUuid } },
+                player: { connect: { uuid: playerUuid } },
                 defensiveStats: { create: {} },
                 farmingStats: { create: {} },
                 miscellaneousStats: { create: {} },
