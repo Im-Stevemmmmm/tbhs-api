@@ -25,14 +25,14 @@ model PitData {
     farmingStatsId        Int
     prestigeStatsId       Int
 
-    Player             Player              @relation(fields: [playerUuid], references: [uuid])
-    OffensiveStats     OffensiveStats      @relation(fields: [offensiveStatsId], references: [id])
-    DefensiveStats     DefensiveStats      @relation(fields: [defensiveStatsId], references: [id])
-    PerformanceStats   PerformanceStats    @relation(fields: [performanceStatsId], references: [id])
-    PerkAndMysticStats PerksAndMysticStats @relation(fields: [perksAndMysticStatsId], references: [id])
-    MiscellaneousStats MiscellaneousStats  @relation(fields: [miscellaneousStatsId], references: [id])
-    FarmingStats       FarmingStats        @relation(fields: [farmingStatsId], references: [id])
-    PrestigeStats      PrestigeStats       @relation(fields: [prestigeStatsId], references: [id])
+    player             Player              @relation(fields: [playerUuid], references: [uuid])
+    offensiveStats     OffensiveStats      @relation(fields: [offensiveStatsId], references: [id])
+    defensiveStats     DefensiveStats      @relation(fields: [defensiveStatsId], references: [id])
+    performanceStats   PerformanceStats    @relation(fields: [performanceStatsId], references: [id])
+    perkAndMysticStats PerksAndMysticStats @relation(fields: [perksAndMysticStatsId], references: [id])
+    miscellaneousStats MiscellaneousStats  @relation(fields: [miscellaneousStatsId], references: [id])
+    farmingStats       FarmingStats        @relation(fields: [farmingStatsId], references: [id])
+    prestigeStats      PrestigeStats       @relation(fields: [prestigeStatsId], references: [id])
 }
 
 model OffensiveStats {
