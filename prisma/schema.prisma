@@ -9,16 +9,123 @@ datasource db {
 }
 
 model Player {
-    uuid    String   @id
-    rank    String   @default("noob")
+    uuid String @id
+    rank String @default("noob")
+
     PitData PitData?
 }
 
 model PitData {
-    player_uuid String @id
-    prestige    Int    @default(1)
-    level       Int    @default(1)
-    xp          Int    @default(0)
-    gold        Int    @default(0)
-    Player      Player @relation(fields: [player_uuid], references: [uuid])
+    playerUuid            String @id
+    offensiveStatsId      Int
+    defensiveStatsId      Int
+    performanceStatsId    Int
+    perksAndMysticStatsId Int
+    miscellaneousStatsId  Int
+    farmingStatsId        Int
+    prestigeStatsId       Int
+
+    Player             Player              @relation(fields: [playerUuid], references: [uuid])
+    OffensiveStats     OffensiveStats      @relation(fields: [offensiveStatsId], references: [id])
+    DefensiveStats     DefensiveStats      @relation(fields: [defensiveStatsId], references: [id])
+    PerformanceStats   PerformanceStats    @relation(fields: [performanceStatsId], references: [id])
+    PerkAndMysticStats PerksAndMysticStats @relation(fields: [perksAndMysticStatsId], references: [id])
+    MiscellaneousStats MiscellaneousStats  @relation(fields: [miscellaneousStatsId], references: [id])
+    FarmingStats       FarmingStats        @relation(fields: [farmingStatsId], references: [id])
+    PrestigeStats      PrestigeStats       @relation(fields: [prestigeStatsId], references: [id])
+}
+
+model OffensiveStats {
+    id               Int   @id @default(autoincrement())
+    kills            Int   @default(0)
+    assists          Int   @default(0)
+    swordHits        Int   @default(0)
+    arrowsShot       Int   @default(0)
+    arrowsHit        Int   @default(0)
+    damageDealt      Float @default(0)
+    meleeDamageDealt Float @default(0)
+    bowDamageDealt   Float @default(0)
+    highestStreak    Int   @default(0)
+
+    PitData PitData?
+}
+
+model DefensiveStats {
+    id               Int   @id @default(autoincrement())
+    deaths           Int   @default(0)
+    damageTaken      Float @default(0)
+    meleeDamageTaken Float @default(0)
+    bowDamageTaken   Float @default(0)
+
+    PitData PitData?
+}
+
+model PerformanceStats {
+    id                        Int   @id @default(autoincrement())
+    xp                        Float @default(0)
+    xpPerHour                 Float @default(0)
+    goldEarned                Float @default(0)
+    goldPerHour               Float @default(0)
+    killDeathRatio            Float @default(0)
+    killDeathPlusAssistRatio  Float @default(0)
+    killsAndAssistsPerHour    Float @default(0)
+    damageDealtOverTakenRatio Float @default(0)
+    bowAccuracy               Float @default(0)
+    contractsStarted          Int   @default(0)
+    contractsCompleted        Int   @default(0)
+
+    PitData PitData?
+}
+
+model PerksAndMysticStats {
+    id                        Int @id @default(autoincrement())
+    goldenApplesEaten         Int @default(0)
+    goldenHeadsEaten          Int @default(0)
+    lavaBucketsEmptied        Int @default(0)
+    fishingRodsLaunched       Int @default(0)
+    soupsDrank                Int @default(0)
+    tierOneMysticsEnchanted   Int @default(0)
+    tierTwoMysticsEnchanted   Int @default(0)
+    tierThreeMysticsEnchanted Int @default(0)
+    darkPantsEnchanted        Int @default(0)
+
+    PitData PitData?
+}
+
+model MiscellaneousStats {
+    id                    Int      @id @default(autoincrement())
+    playtime              Float    @default(0)
+    leftClicks            Int      @default(0)
+    diamondItemsPurchased Int      @default(0)
+    chatMessages          Int      @default(0)
+    blocksPlaced          Int      @default(0)
+    blocksBroken          Int      @default(0)
+    jumpsIntoPit          Int      @default(0)
+    launcherLaunches      Int      @default(0)
+    dailyTradeLimits      Int      @default(0)
+    goldTradeLimits       Int      @default(0)
+    genisisPoints         Int      @default(0)
+    PitData               PitData?
+}
+
+model FarmingStats {
+    id                   Int      @id @default(autoincrement())
+    wheatFarmed          Int      @default(0)
+    fishedAnything       Int      @default(0)
+    fishedFish           Int      @default(0)
+    fishSold             Int      @default(0)
+    hayBalesSold         Int      @default(0)
+    kingsQuestCompleted  Int      @default(0)
+    sewerTreasuresFound  Int      @default(0)
+    nightQuestsCompleted Int      @default(0)
+    PitData              PitData?
+}
+
+model PrestigeStats {
+    id                   Int       @id @default(autoincrement())
+    prestige             Int       @default(0)
+    currentRenown        Int       @default(0)
+    lifetimeRenown       Int       @default(0)
+    renownShopCompletion Int       @default(0)
+    PitData              PitData[]
 }
