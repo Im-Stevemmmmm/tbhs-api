@@ -93,39 +93,42 @@ model PerksAndMysticStats {
 }
 
 model MiscellaneousStats {
-    id                    Int      @id @default(autoincrement())
-    playtime              Float    @default(0)
-    leftClicks            Int      @default(0)
-    diamondItemsPurchased Int      @default(0)
-    chatMessages          Int      @default(0)
-    blocksPlaced          Int      @default(0)
-    blocksBroken          Int      @default(0)
-    jumpsIntoPit          Int      @default(0)
-    launcherLaunches      Int      @default(0)
-    dailyTradeLimits      Int      @default(0)
-    goldTradeLimits       Int      @default(0)
-    genisisPoints         Int      @default(0)
-    PitData               PitData?
+    id                    Int   @id @default(autoincrement())
+    playtime              Float @default(0)
+    leftClicks            Int   @default(0)
+    diamondItemsPurchased Int   @default(0)
+    chatMessages          Int   @default(0)
+    blocksPlaced          Int   @default(0)
+    blocksBroken          Int   @default(0)
+    jumpsIntoPit          Int   @default(0)
+    launcherLaunches      Int   @default(0)
+    dailyTradeLimits      Int   @default(0)
+    goldTradeLimits       Int   @default(0)
+    genisisPoints         Int   @default(0)
+
+    PitData PitData?
 }
 
 model FarmingStats {
-    id                   Int      @id @default(autoincrement())
-    wheatFarmed          Int      @default(0)
-    fishedAnything       Int      @default(0)
-    fishedFish           Int      @default(0)
-    fishSold             Int      @default(0)
-    hayBalesSold         Int      @default(0)
-    kingsQuestCompleted  Int      @default(0)
-    sewerTreasuresFound  Int      @default(0)
-    nightQuestsCompleted Int      @default(0)
-    PitData              PitData?
+    id                   Int @id @default(autoincrement())
+    wheatFarmed          Int @default(0)
+    fishedAnything       Int @default(0)
+    fishedFish           Int @default(0)
+    fishSold             Int @default(0)
+    hayBalesSold         Int @default(0)
+    kingsQuestCompleted  Int @default(0)
+    sewerTreasuresFound  Int @default(0)
+    nightQuestsCompleted Int @default(0)
+
+    PitData PitData?
 }
 
 model PrestigeStats {
-    id                   Int       @id @default(autoincrement())
-    prestige             Int       @default(0)
-    currentRenown        Int       @default(0)
-    lifetimeRenown       Int       @default(0)
-    renownShopCompletion Int       @default(0)
-    PitData              PitData[]
+    id                   Int @id @default(autoincrement())
+    prestige             Int @default(0)
+    currentRenown        Int @default(0)
+    lifetimeRenown       Int @default(0)
+    renownShopCompletion Int @default(0)
+
+    PitData PitData?
 }
