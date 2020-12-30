@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { Player as PlayerModel } from "@prisma/client";
 import { PlayerNotFoundException } from "src/exceptions/player-not-found.exception";
-import { standardUUIDPipe } from "../../utils/standard-uuid-pipe";
+import { UUIDv4Pipe } from "../../utils/standard-uuid-pipe";
 import { RegisterPlayerDto } from "./dtos/register-player.dto";
 import { UpdatePlayerDto } from "./dtos/update-player.dto";
 import { PlayersService } from "./players.service";
@@ -17,7 +17,7 @@ export class PlayersController {
 
     @Get("/:uuid")
     async getPlayerByUuid(
-        @Param("uuid", standardUUIDPipe) uuid: string
+        @Param("uuid", UUIDv4Pipe) uuid: string
     ): Promise<PlayerModel> {
         const player = await this.playersService.findOne({ uuid });
 
@@ -40,7 +40,7 @@ export class PlayersController {
 
     @Post("/:uuid")
     async updatePlayer(
-        @Param("uuid", standardUUIDPipe) uuid: string,
+        @Param("uuid", UUIDv4Pipe) uuid: string,
         @Body() updatePlayerDto: UpdatePlayerDto
     ): Promise<PlayerModel> {
         return await this.playersService.update({
