@@ -102,7 +102,7 @@ describe("PitOffensiveStats", () => {
             );
 
             expect(
-                await pitOffensiveStatsController.updateStats("5467", {
+                await pitOffensiveStatsController.updateOffensiveStats("5467", {
                     arrowsHit: 1,
                 })
             ).toBe(result);

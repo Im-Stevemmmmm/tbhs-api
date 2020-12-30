@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { PitOffensiveStats, Prisma } from "@prisma/client";
-import { PrismaService } from "../../../../resources/prisma/prisma.service";
+import { PrismaService } from "src/resources/prisma/prisma.service";
 
 @Injectable()
 export class PitOffensiveStatsService {

@@ -1,13 +1,6 @@
-import {
-    Body,
-    Controller,
-    Get,
-    Param,
-    ParseUUIDPipe,
-    Put,
-} from "@nestjs/common";
+import { Body, Controller, Get, Param, Put } from "@nestjs/common";
 import { PitOffensiveStats } from "@prisma/client";
-import { standardUUIDPipe } from "src/utils/standard-uuid-pipe";
+import { UUIDv4Pipe } from "src/utils/standard-uuid-pipe";
 import { pitStatsRoute } from "../../routes";
 import { UpdateOffensiveStatsDto } from "./dtos/update-offensive-stats.dto";
 import { PitOffensiveStatsService } from "./offensive-stats.service";
@@ -25,7 +18,7 @@ export class PitOffensiveStatsController {
 
     @Get(":uuid")
     async getOffensiveStatsByUuid(
-        @Param("uuid", new ParseUUIDPipe()) uuid: string
+        @Param("uuid", UUIDv4Pipe) uuid: string
     ): Promise<PitOffensiveStats> {
         return await this.pitOffensiveStatsService.findOne({
             playerUuid: uuid,
@@ -33,10 +26,10 @@ export class PitOffensiveStatsController {
     }
 
     @Put(":uuid")
-    async updateStats(
-        @Param("uuid", standardUUIDPipe) uuid: string,
+    async updateOffensiveStats(
+        @Param("uuid", UUIDv4Pipe) uuid: string,
         @Body() updateOffensiveStatsDto: UpdateOffensiveStatsDto
-    ) {
+    ): Promise<PitOffensiveStats> {
         return await this.pitOffensiveStatsService.update(
             { playerUuid: uuid },
             updateOffensiveStatsDto
