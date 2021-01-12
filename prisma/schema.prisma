@@ -1,120 +1,112 @@
 generator client {
-    provider      = "prisma-client-js"
-    binaryTargets = ["native", "debian-openssl-1.1.x"]
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x"]
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Player {
-    uuid String @id
-    rank String @default("noob")
-
-    pitDefensiveStats      PitDefensiveStats?
-    pitOffensiveStats      PitOffensiveStats?
-    pitPerformanceStats    PitPerformanceStats?
-    pitPerksAndMysticStats PitPerksAndMysticStats?
-    pitMiscellaneousStats  PitMiscellaneousStats?
-    pitFarmingStats        PitFarmingStats?
-    pitPrestigeStats       PitPrestigeStats?
+  uuid                   String                  @id
+  rank                   String                  @default("noob")
+  pitDefensiveStats      PitDefensiveStats?
+  pitFarmingStats        PitFarmingStats?
+  pitMiscellaneousStats  PitMiscellaneousStats?
+  pitOffensiveStats      PitOffensiveStats?
+  pitPerformanceStats    PitPerformanceStats?
+  pitPerksAndMysticStats PitPerksAndMysticStats?
+  pitPrestigeStats       PitPrestigeStats?
 }
 
 model PitOffensiveStats {
-    playerUuid       String @id
-    kills            Int    @default(0)
-    assists          Int    @default(0)
-    swordHits        Int    @default(0)
-    arrowsShot       Int    @default(0)
-    arrowsHit        Int    @default(0)
-    damageDealt      Float  @default(0)
-    meleeDamageDealt Float  @default(0)
-    bowDamageDealt   Float  @default(0)
-    highestStreak    Int    @default(0)
-
-    player Player @relation(fields: [playerUuid], references: [uuid])
+  playerUuid       String @id
+  kills            Int    @default(0)
+  assists          Int    @default(0)
+  swordHits        Int    @default(0)
+  arrowsShot       Int    @default(0)
+  arrowsHit        Int    @default(0)
+  damageDealt      Float  @default(0)
+  meleeDamageDealt Float  @default(0)
+  bowDamageDealt   Float  @default(0)
+  highestStreak    Int    @default(0)
+  Player           Player @relation(fields: [playerUuid], references: [uuid])
 }
 
 model PitDefensiveStats {
-    playerUuid       String @id
-    deaths           Int    @default(0)
-    damageTaken      Float  @default(0)
-    meleeDamageTaken Float  @default(0)
-    bowDamageTaken   Float  @default(0)
-
-    player Player @relation(fields: [playerUuid], references: [uuid])
+  playerUuid       String @id
+  deaths           Int    @default(0)
+  damageTaken      Float  @default(0)
+  meleeDamageTaken Float  @default(0)
+  bowDamageTaken   Float  @default(0)
+  player           Player @relation(fields: [playerUuid], references: [uuid])
 }
 
 model PitPerformanceStats {
-    playerUuid                String @id
-    xp                        Float  @default(0)
-    xpPerHour                 Float  @default(0)
-    goldEarned                Float  @default(0)
-    goldPerHour               Float  @default(0)
-    killDeathRatio            Float  @default(0)
-    killDeathPlusAssistRatio  Float  @default(0)
-    killsAndAssistsPerHour    Float  @default(0)
-    damageDealtOverTakenRatio Float  @default(0)
-    bowAccuracy               Float  @default(0)
-    contractsStarted          Int    @default(0)
-    contractsCompleted        Int    @default(0)
-
-    player Player @relation(fields: [playerUuid], references: [uuid])
+  playerUuid                String @id
+  xp                        Float  @default(0)
+  xpPerHour                 Float  @default(0)
+  goldEarned                Float  @default(0)
+  goldPerHour               Float  @default(0)
+  killDeathRatio            Float  @default(0)
+  killDeathPlusAssistRatio  Float  @default(0)
+  killsAndAssistsPerHour    Float  @default(0)
+  damageDealtOverTakenRatio Float  @default(0)
+  bowAccuracy               Float  @default(0)
+  contractsStarted          Int    @default(0)
+  contractsCompleted        Int    @default(0)
+  Player                    Player @relation(fields: [playerUuid], references: [uuid])
 }
 
 model PitPerksAndMysticStats {
-    playerUuid                String @id
-    goldenApplesEaten         Int    @default(0)
-    goldenHeadsEaten          Int    @default(0)
-    lavaBucketsEmptied        Int    @default(0)
-    fishingRodsLaunched       Int    @default(0)
-    soupsDrank                Int    @default(0)
-    tierOneMysticsEnchanted   Int    @default(0)
-    tierTwoMysticsEnchanted   Int    @default(0)
-    tierThreeMysticsEnchanted Int    @default(0)
-    darkPantsEnchanted        Int    @default(0)
-
-    player Player @relation(fields: [playerUuid], references: [uuid])
+  playerUuid                String @id
+  goldenApplesEaten         Int    @default(0)
+  goldenHeadsEaten          Int    @default(0)
+  lavaBucketsEmptied        Int    @default(0)
+  fishingRodsLaunched       Int    @default(0)
+  soupsDrank                Int    @default(0)
+  tierOneMysticsEnchanted   Int    @default(0)
+  tierTwoMysticsEnchanted   Int    @default(0)
+  tierThreeMysticsEnchanted Int    @default(0)
+  darkPantsEnchanted        Int    @default(0)
+  Player                    Player @relation(fields: [playerUuid], references: [uuid])
 }
 
 model PitMiscellaneousStats {
-    playerUuid            String @id
-    playtime              Float  @default(0)
-    leftClicks            Int    @default(0)
-    diamondItemsPurchased Int    @default(0)
-    chatMessages          Int    @default(0)
-    blocksPlaced          Int    @default(0)
-    blocksBroken          Int    @default(0)
-    jumpsIntoPit          Int    @default(0)
-    launcherLaunches      Int    @default(0)
-    dailyTradeLimits      Int    @default(0)
-    goldTradeLimits       Int    @default(0)
-    genisisPoints         Int    @default(0)
-
-    player Player @relation(fields: [playerUuid], references: [uuid])
+  playerUuid            String @id
+  playtime              Float  @default(0)
+  leftClicks            Int    @default(0)
+  diamondItemsPurchased Int    @default(0)
+  chatMessages          Int    @default(0)
+  blocksPlaced          Int    @default(0)
+  blocksBroken          Int    @default(0)
+  jumpsIntoPit          Int    @default(0)
+  launcherLaunches      Int    @default(0)
+  dailyTradeLimits      Int    @default(0)
+  goldTradeLimits       Int    @default(0)
+  genisisPoints         Int    @default(0)
+  Player                Player @relation(fields: [playerUuid], references: [uuid])
 }
 
 model PitFarmingStats {
-    playerUuid           String @id
-    wheatFarmed          Int    @default(0)
-    fishedAnything       Int    @default(0)
-    fishedFish           Int    @default(0)
-    fishSold             Int    @default(0)
-    hayBalesSold         Int    @default(0)
-    kingsQuestCompleted  Int    @default(0)
-    sewerTreasuresFound  Int    @default(0)
-    nightQuestsCompleted Int    @default(0)
-
-    player Player @relation(fields: [playerUuid], references: [uuid])
+  playerUuid           String @id
+  wheatFarmed          Int    @default(0)
+  fishedAnything       Int    @default(0)
+  fishedFish           Int    @default(0)
+  fishSold             Int    @default(0)
+  hayBalesSold         Int    @default(0)
+  kingsQuestCompleted  Int    @default(0)
+  sewerTreasuresFound  Int    @default(0)
+  nightQuestsCompleted Int    @default(0)
+  Player               Player @relation(fields: [playerUuid], references: [uuid])
 }
 
 model PitPrestigeStats {
-    playerUuid           String @id
-    prestige             Int    @default(0)
-    currentRenown        Int    @default(0)
-    lifetimeRenown       Int    @default(0)
-    renownShopCompletion Int    @default(0)
-
-    player Player @relation(fields: [playerUuid], references: [uuid])
+  playerUuid           String @id
+  prestige             Int    @default(0)
+  currentRenown        Int    @default(0)
+  lifetimeRenown       Int    @default(0)
+  renownShopCompletion Int    @default(0)
+  Player               Player @relation(fields: [playerUuid], references: [uuid])
 }
