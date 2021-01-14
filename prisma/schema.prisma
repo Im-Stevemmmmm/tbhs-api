@@ -1,6 +1,5 @@
 generator client {
-  provider      = "prisma-client-js"
-  binaryTargets = ["native", "debian-openssl-1.1.x"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -8,20 +7,50 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Player {
-  uuid                   String                  @id
-  rank                   String                  @default("noob")
-  pitDefensiveStats      PitDefensiveStats?
-  pitFarmingStats        PitFarmingStats?
-  pitMiscellaneousStats  PitMiscellaneousStats?
-  pitOffensiveStats      PitOffensiveStats?
-  pitPerformanceStats    PitPerformanceStats?
-  pitPerksAndMysticStats PitPerksAndMysticStats?
-  pitPrestigeStats       PitPrestigeStats?
+model PitDefensiveStats {
+  id               Int    @id @default(autoincrement())
+  playerUuid       String
+  deaths           Int    @default(0)
+  damageTaken      Float  @default(0)
+  meleeDamageTaken Float  @default(0)
+  bowDamageTaken   Float  @default(0)
+  Player           Player @relation(fields: [playerUuid], references: [uuid])
+}
+
+model PitFarmingStats {
+  id                   Int    @id @default(autoincrement())
+  playerUuid           String
+  wheatFarmed          Int    @default(0)
+  fishedAnything       Int    @default(0)
+  fishedFish           Int    @default(0)
+  fishSold             Int    @default(0)
+  hayBalesSold         Int    @default(0)
+  kingsQuestCompleted  Int    @default(0)
+  sewerTreasuresFound  Int    @default(0)
+  nightQuestsCompleted Int    @default(0)
+  Player               Player @relation(fields: [playerUuid], references: [uuid])
+}
+
+model PitMiscellaneousStats {
+  id                    Int    @id @default(autoincrement())
+  playerUuid            String
+  playtime              Float  @default(0)
+  leftClicks            Int    @default(0)
+  diamondItemsPurchased Int    @default(0)
+  chatMessages          Int    @default(0)
+  blocksPlaced          Int    @default(0)
+  blocksBroken          Int    @default(0)
+  jumpsIntoPit          Int    @default(0)
+  launcherLaunches      Int    @default(0)
+  dailyTradeLimits      Int    @default(0)
+  goldTradeLimits       Int    @default(0)
+  genisisPoints         Int    @default(0)
+  Player                Player @relation(fields: [playerUuid], references: [uuid])
 }
 
 model PitOffensiveStats {
-  playerUuid       String @id
+  id               Int    @id @default(autoincrement())
+  playerUuid       String
   kills            Int    @default(0)
   assists          Int    @default(0)
   swordHits        Int    @default(0)
@@ -34,17 +63,9 @@ model PitOffensiveStats {
   Player           Player @relation(fields: [playerUuid], references: [uuid])
 }
 
-model PitDefensiveStats {
-  playerUuid       String @id
-  deaths           Int    @default(0)
-  damageTaken      Float  @default(0)
-  meleeDamageTaken Float  @default(0)
-  bowDamageTaken   Float  @default(0)
-  player           Player @relation(fields: [playerUuid], references: [uuid])
-}
-
 model PitPerformanceStats {
-  playerUuid                String @id
+  id                        Int    @id @default(autoincrement())
+  playerUuid                String
   xp                        Float  @default(0)
   xpPerHour                 Float  @default(0)
   goldEarned                Float  @default(0)
@@ -60,7 +81,8 @@ model PitPerformanceStats {
 }
 
 model PitPerksAndMysticStats {
-  playerUuid                String @id
+  id                        Int    @id @default(autoincrement())
+  playerUuid                String
   goldenApplesEaten         Int    @default(0)
   goldenHeadsEaten          Int    @default(0)
   lavaBucketsEmptied        Int    @default(0)
@@ -73,40 +95,35 @@ model PitPerksAndMysticStats {
   Player                    Player @relation(fields: [playerUuid], references: [uuid])
 }
 
-model PitMiscellaneousStats {
-  playerUuid            String @id
-  playtime              Float  @default(0)
-  leftClicks            Int    @default(0)
-  diamondItemsPurchased Int    @default(0)
-  chatMessages          Int    @default(0)
-  blocksPlaced          Int    @default(0)
-  blocksBroken          Int    @default(0)
-  jumpsIntoPit          Int    @default(0)
-  launcherLaunches      Int    @default(0)
-  dailyTradeLimits      Int    @default(0)
-  goldTradeLimits       Int    @default(0)
-  genisisPoints         Int    @default(0)
-  Player                Player @relation(fields: [playerUuid], references: [uuid])
-}
-
-model PitFarmingStats {
-  playerUuid           String @id
-  wheatFarmed          Int    @default(0)
-  fishedAnything       Int    @default(0)
-  fishedFish           Int    @default(0)
-  fishSold             Int    @default(0)
-  hayBalesSold         Int    @default(0)
-  kingsQuestCompleted  Int    @default(0)
-  sewerTreasuresFound  Int    @default(0)
-  nightQuestsCompleted Int    @default(0)
-  Player               Player @relation(fields: [playerUuid], references: [uuid])
-}
-
 model PitPrestigeStats {
-  playerUuid           String @id
+  id                   Int    @id @default(autoincrement())
+  playerUuid           String
   prestige             Int    @default(0)
   currentRenown        Int    @default(0)
   lifetimeRenown       Int    @default(0)
   renownShopCompletion Int    @default(0)
   Player               Player @relation(fields: [playerUuid], references: [uuid])
+}
+
+model Player {
+  id                     Int                     @id
+  uuid                   String                  @unique
+  rank                   String?
+  joinedAt               DateTime                @default(now())
+  PitDefensiveStats      PitDefensiveStats?
+  PitFarmingStats        PitFarmingStats?
+  PitMiscellaneousStats  PitMiscellaneousStats?
+  PitOffensiveStats      PitOffensiveStats?
+  PitPerformanceStats    PitPerformanceStats?
+  PitPerksAndMysticStats PitPerksAndMysticStats?
+  PitPrestigeStats       PitPrestigeStats?
+  ChatLog                ChatLog[]
+}
+
+model ChatLog {
+  id         Int      @id @default(autoincrement())
+  playerUuid String
+  message    String
+  time       DateTime @default(now())
+  Player     Player   @relation(fields: [playerUuid], references: [uuid])
 }
