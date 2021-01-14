@@ -5,6 +5,8 @@ import { masterRouter } from "./routes";
 const main = async () => {
     const app = express();
 
+    app.use(express.json());
+
     app.use("/api/v1", masterRouter);
 
     app.listen(4000, () => console.log("Started on http://localhost:4000"));
