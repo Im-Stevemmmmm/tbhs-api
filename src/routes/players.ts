@@ -16,6 +16,15 @@ router.get("/:uuid", async ({ params: { uuid } }, res) => {
         },
     });
 
+    if (!player) {
+        res.status(404).send({
+            error: "404",
+            message: "Player not found.",
+        });
+
+        return;
+    }
+
     res.send(player);
 });
 
