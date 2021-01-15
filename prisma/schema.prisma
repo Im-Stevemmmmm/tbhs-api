@@ -9,7 +9,7 @@ datasource db {
 
 model PitDefensiveStats {
   id               Int    @id @default(autoincrement())
-  playerUuid       String
+  playerUuid       String @unique
   deaths           Int    @default(0)
   damageTaken      Float  @default(0)
   meleeDamageTaken Float  @default(0)
@@ -19,7 +19,7 @@ model PitDefensiveStats {
 
 model PitFarmingStats {
   id                   Int    @id @default(autoincrement())
-  playerUuid           String
+  playerUuid           String @unique
   wheatFarmed          Int    @default(0)
   fishedAnything       Int    @default(0)
   fishedFish           Int    @default(0)
@@ -33,7 +33,7 @@ model PitFarmingStats {
 
 model PitMiscellaneousStats {
   id                    Int    @id @default(autoincrement())
-  playerUuid            String
+  playerUuid            String @unique
   playtime              Float  @default(0)
   leftClicks            Int    @default(0)
   diamondItemsPurchased Int    @default(0)
@@ -50,7 +50,7 @@ model PitMiscellaneousStats {
 
 model PitOffensiveStats {
   id               Int    @id @default(autoincrement())
-  playerUuid       String
+  playerUuid       String @unique
   kills            Int    @default(0)
   assists          Int    @default(0)
   swordHits        Int    @default(0)
@@ -65,7 +65,7 @@ model PitOffensiveStats {
 
 model PitPerformanceStats {
   id                        Int    @id @default(autoincrement())
-  playerUuid                String
+  playerUuid                String @unique
   xp                        Float  @default(0)
   xpPerHour                 Float  @default(0)
   goldEarned                Float  @default(0)
@@ -82,7 +82,7 @@ model PitPerformanceStats {
 
 model PitPerksAndMysticStats {
   id                        Int    @id @default(autoincrement())
-  playerUuid                String
+  playerUuid                String @unique
   goldenApplesEaten         Int    @default(0)
   goldenHeadsEaten          Int    @default(0)
   lavaBucketsEmptied        Int    @default(0)
@@ -97,7 +97,7 @@ model PitPerksAndMysticStats {
 
 model PitPrestigeStats {
   id                   Int    @id @default(autoincrement())
-  playerUuid           String
+  playerUuid           String @unique
   prestige             Int    @default(0)
   currentRenown        Int    @default(0)
   lifetimeRenown       Int    @default(0)
@@ -106,10 +106,14 @@ model PitPrestigeStats {
 }
 
 model Player {
-  id                     Int                     @id
+  id                     Int                     @id @default(autoincrement())
   uuid                   String                  @unique
-  rank                   String?
+  rank                   String?                 @default("none")
   joinedAt               DateTime                @default(now())
+  lastJoin               DateTime                @default(now())
+  AdminApiKey            AdminApiKey?
+  ChatLog                ChatLog[]
+  GenericApiKey          GenericApiKey?
   PitDefensiveStats      PitDefensiveStats?
   PitFarmingStats        PitFarmingStats?
   PitMiscellaneousStats  PitMiscellaneousStats?
@@ -117,7 +121,6 @@ model Player {
   PitPerformanceStats    PitPerformanceStats?
   PitPerksAndMysticStats PitPerksAndMysticStats?
   PitPrestigeStats       PitPrestigeStats?
-  ChatLog                ChatLog[]
 }
 
 model ChatLog {
@@ -126,4 +129,18 @@ model ChatLog {
   message    String
   time       DateTime @default(now())
   Player     Player   @relation(fields: [playerUuid], references: [uuid])
+}
+
+model AdminApiKey {
+  id         Int    @id @default(autoincrement())
+  playerUuid String @unique
+  key        String @unique
+  Player     Player @relation(fields: [playerUuid], references: [uuid])
+}
+
+model GenericApiKey {
+  id         Int    @id @default(autoincrement())
+  playerUuid String @unique
+  key        String @unique
+  Player     Player @relation(fields: [playerUuid], references: [uuid])
 }
