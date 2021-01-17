@@ -5,6 +5,7 @@ import { prisma } from "../../../context";
 import { adminApiKeyAuth, apiKeyAuth } from "../../../utils/auth-middleware";
 import { camelCaseKeys } from "../../../utils/camel-case-keys";
 import { createError } from "../../../utils/error";
+import { formatPitResponse } from "../../../utils/the-pit/format-response";
 
 const router = Router();
 
@@ -31,7 +32,7 @@ const types: Types = {
     },
 };
 
-const getKeys = () => {
+const getAvailabieStats = () => {
     const keys = Object.keys(types);
     const finalKey = keys.pop();
 
@@ -54,7 +55,11 @@ router.get(
             const typeArr: string[] = [].concat(type);
 
             if (typeArr.some(t => !types[t.toLowerCase()])) {
-                return createError(res, 409, `Type must be ${getKeys()}.`);
+                return createError(
+                    res,
+                    409,
+                    `Type must be ${getAvailabieStats()}.`
+                );
             }
 
             const selectionObject: Prisma.PlayerSelect = {};
@@ -73,7 +78,7 @@ router.get(
                 select: selectionObject,
             });
 
-            return res.send(camelCaseKeys(data));
+            return res.send(formatPitResponse(data));
         }
 
         const selectionObject: Prisma.PlayerSelect = {};
@@ -93,7 +98,7 @@ router.get(
             return createError(res, 404, "Player not found.");
         }
 
-        return res.send(camelCaseKeys(data));
+        return res.send(formatPitResponse(data));
     }
 );
 
@@ -116,7 +121,7 @@ router.put(
                 data,
             });
 
-            return res.send(result);
+            return res.send(formatPitResponse(result));
         } catch (err) {
             return createError(
                 res,
