@@ -1,19 +1,34 @@
+import { Prisma } from "@prisma/client";
 import { isUUID } from "class-validator";
 import { Router } from "express";
 import { prisma } from "../../../context";
 import { adminApiKeyAuth, apiKeyAuth } from "../../../utils/auth-middleware";
+import { camelCaseKeys } from "../../../utils/camel-case-keys";
 import { createError } from "../../../utils/error";
 
 const router = Router();
 
-const types = {
-    offensive: prisma.pitOffensiveStats,
-    defensive: prisma.pitDefensiveStats,
-    farming: prisma.pitFarmingStats,
-    miscellaneous: prisma.pitMiscellaneousStats,
-    performance: prisma.pitPerformanceStats,
-    prestige: prisma.pitPrestigeStats,
-    "perks-and-mystics": prisma.pitPerksAndMysticStats,
+interface Types {
+    [x: string]: { key: keyof Prisma.PlayerSelect; delegate: any };
+}
+
+const types: Types = {
+    offensive: { key: "PitOffensiveStats", delegate: prisma.pitOffensiveStats },
+    defensive: { key: "PitDefensiveStats", delegate: prisma.pitDefensiveStats },
+    farming: { key: "PitFarmingStats", delegate: prisma.pitFarmingStats },
+    miscellaneous: {
+        key: "PitMiscellaneousStats",
+        delegate: prisma.pitMiscellaneousStats,
+    },
+    performance: {
+        key: "PitPerformanceStats",
+        delegate: prisma.pitPerformanceStats,
+    },
+    prestige: { key: "PitPrestigeStats", delegate: prisma.pitDefensiveStats },
+    "perks-and-mystics": {
+        key: "PitPerksAndMysticStats",
+        delegate: prisma.pitPerksAndMysticStats,
+    },
 };
 
 const getKeys = () => {
@@ -38,44 +53,47 @@ router.get(
         if (type) {
             const typeArr: string[] = [].concat(type);
 
-            if (typeArr.some(t => !types[t])) {
+            if (typeArr.some(t => !types[t.toLowerCase()])) {
                 return createError(res, 409, `Type must be ${getKeys()}.`);
             }
 
-            const data = await Promise.all(
-                typeArr.map(
-                    async t =>
-                        await types[t.toLowerCase()].findUnique({
-                            where: {
-                                playerUuid: uuid,
-                            },
-                        })
-                )
-            );
+            const selectionObject: Prisma.PlayerSelect = {};
 
-            return res.send(data);
+            typeArr.forEach(t => {
+                const casedKey = t.toLowerCase();
+                const key = types[casedKey].key as string;
+
+                selectionObject[key] = true;
+            });
+
+            const data = await prisma.player.findUnique({
+                where: {
+                    uuid,
+                },
+                select: selectionObject,
+            });
+
+            return res.send(camelCaseKeys(data));
         }
 
-        const result = await prisma.player.findUnique({
+        const selectionObject: Prisma.PlayerSelect = {};
+
+        Object.keys(types).forEach(
+            k => (selectionObject[types[k].key as string] = true)
+        );
+
+        const data = await prisma.player.findUnique({
             where: {
                 uuid,
             },
-            select: {
-                PitDefensiveStats: true,
-                PitFarmingStats: true,
-                PitMiscellaneousStats: true,
-                PitOffensiveStats: true,
-                PitPerformanceStats: true,
-                PitPerksAndMysticStats: true,
-                PitPrestigeStats: true,
-            },
+            select: selectionObject,
         });
 
-        if (!result) {
+        if (!data) {
             return createError(res, 404, "Player not found.");
         }
 
-        return res.send(result);
+        return res.send(camelCaseKeys(data));
     }
 );
 
@@ -91,7 +109,7 @@ router.put(
         try {
             const { data, type } = body as UpdateStatsBody;
 
-            const result = await types[type.toLowerCase()].update({
+            const result = await types[type.toLowerCase()].delegate.update({
                 where: {
                     playerUuid: uuid,
                 },
