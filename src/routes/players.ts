@@ -1,6 +1,6 @@
 import { isUUID } from "class-validator";
-import { Request, Response, Router } from "express";
-import { prisma } from "../context";
+import { NextFunction, Request, Response, Router } from "express";
+import { prisma, redis } from "../context";
 import { adminAuth, apiKeyAuth } from "../utils/auth-middleware";
 import { createError } from "../utils/error";
 import { verifyQuery } from "../utils/verify-query";
@@ -36,19 +36,37 @@ router.get(
     }
 );
 
-router.get("/:uuid", apiKeyAuth, async ({ params: { uuid } }, res) => {
-    const player = await prisma.player.findUnique({
-        where: {
-            uuid,
-        },
-    });
+const playerRedisValue = (uuid: string) => `player:${uuid}`;
 
-    if (!player) {
-        return createError(res, 404, "Player not found.");
+const playerCache = async (
+    { params: { uuid } }: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const cachedValue = await redis.get(playerRedisValue(uuid));
+
+    return cachedValue ? res.send(JSON.parse(cachedValue)) : next();
+};
+
+router.get(
+    "/:uuid",
+    [apiKeyAuth, playerCache],
+    async ({ params: { uuid } }: Request, res: Response) => {
+        const player = await prisma.player.findUnique({
+            where: {
+                uuid,
+            },
+        });
+
+        if (!player) {
+            return createError(res, 404, "Player not found.");
+        }
+
+        redis.setex(playerRedisValue(uuid), 60, JSON.stringify(player));
+
+        return res.send(player);
     }
-
-    return res.send(player);
-});
+);
 
 interface PlayerPost {
     uuid: string;
