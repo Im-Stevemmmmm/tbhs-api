@@ -135,6 +135,7 @@ model AdminApiKey {
   id         Int    @id @default(autoincrement())
   playerUuid String @unique
   key        String @unique
+  uuid       String @unique
   Player     Player @relation(fields: [playerUuid], references: [uuid])
 }
 
@@ -142,5 +143,6 @@ model GenericApiKey {
   id         Int    @id @default(autoincrement())
   playerUuid String @unique
   key        String @unique
+  uuid       String @unique
   Player     Player @relation(fields: [playerUuid], references: [uuid])
 }
