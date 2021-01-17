@@ -25,7 +25,7 @@ const types: Types = {
         key: "PitPerformanceStats",
         delegate: prisma.pitPerformanceStats,
     },
-    prestige: { key: "PitPrestigeStats", delegate: prisma.pitDefensiveStats },
+    prestige: { key: "PitPrestigeStats", delegate: prisma.pitPrestigeStats },
     "perks-and-mystics": {
         key: "PitPerksAndMysticStats",
         delegate: prisma.pitPerksAndMysticStats,
