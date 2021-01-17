@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import argon from "argon2";
 import uuidApiKey from "uuid-apikey";
 import cors from "cors";
-import { prisma } from "../prisma";
+import { prisma } from "../context";
 import { createError } from "./error";
 
 interface ApiKeyCheckResult {

@@ -1,5 +1,5 @@
 import express from "express";
-import { prisma } from "./prisma";
+import { prisma } from "./context";
 import { masterRouter } from "./routes";
 import { privateRoutes } from "./routes/private";
 

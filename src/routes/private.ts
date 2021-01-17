@@ -1,7 +1,7 @@
 import argon from "argon2";
 import { Request, Response, Router } from "express";
 import uuidApiKey from "uuid-apikey";
-import { prisma } from "../prisma";
+import { prisma } from "../context";
 import { adminAuth } from "../utils/auth-middleware";
 
 const router = Router();

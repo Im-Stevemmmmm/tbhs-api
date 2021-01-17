@@ -1,6 +1,6 @@
 import { isUUID } from "class-validator";
 import { Request, Response, Router } from "express";
-import { prisma } from "../prisma";
+import { prisma } from "../context";
 import { adminAuth, apiKeyAuth } from "../utils/auth-middleware";
 import { createError } from "../utils/error";
 import { verifyQuery } from "../utils/verify-query";

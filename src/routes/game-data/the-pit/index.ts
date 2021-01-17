@@ -1,6 +1,6 @@
 import { isUUID } from "class-validator";
 import { Router } from "express";
-import { prisma } from "../../../prisma";
+import { prisma } from "../../../context";
 import { adminApiKeyAuth, apiKeyAuth } from "../../../utils/auth-middleware";
 import { createError } from "../../../utils/error";
 
