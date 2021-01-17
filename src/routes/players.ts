@@ -1,11 +1,27 @@
+import { Player } from "@prisma/client";
 import { isUUID } from "class-validator";
 import { NextFunction, Request, Response, Router } from "express";
 import { prisma, redis } from "../context";
 import { adminAuth, apiKeyAuth } from "../utils/auth-middleware";
+import { camelCaseKeys } from "../utils/camel-case-keys";
 import { createError } from "../utils/error";
 import { verifyQuery } from "../utils/verify-query";
 
 const router = Router();
+
+const playerCacheKey = (uuid: string) => `player:global:${uuid}`;
+const setPlayerCache = (uuid: string, player: Player) =>
+    redis.setex(playerCacheKey(uuid), 180, JSON.stringify(player));
+
+const playerCache = async (
+    { params: { uuid } }: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const cachedValue = await redis.get(playerCacheKey(uuid));
+
+    return cachedValue ? res.send(JSON.parse(cachedValue)) : next();
+};
 
 router.get(
     "/",
@@ -36,18 +52,6 @@ router.get(
     }
 );
 
-const playerRedisValue = (uuid: string) => `player:${uuid}`;
-
-const playerCache = async (
-    { params: { uuid } }: Request,
-    res: Response,
-    next: NextFunction
-) => {
-    const cachedValue = await redis.get(playerRedisValue(uuid));
-
-    return cachedValue ? res.send(JSON.parse(cachedValue)) : next();
-};
-
 router.get(
     "/:uuid",
     [apiKeyAuth, playerCache],
@@ -62,7 +66,7 @@ router.get(
             return createError(res, 404, "Player not found.");
         }
 
-        redis.setex(playerRedisValue(uuid), 60, JSON.stringify(player));
+        setPlayerCache(uuid, player);
 
         return res.send(player);
     }
@@ -72,7 +76,7 @@ interface PlayerPost {
     uuid: string;
 }
 
-router.post("", adminAuth, async ({ body }: Request, res: Response) => {
+router.post("/", adminAuth, async ({ body }: Request, res: Response) => {
     const { uuid } = body as PlayerPost;
 
     if (!isUUID(uuid, "4")) {
@@ -102,7 +106,9 @@ router.post("", adminAuth, async ({ body }: Request, res: Response) => {
         },
     });
 
-    return res.send(result);
+    setPlayerCache(uuid, result);
+
+    return res.send(camelCaseKeys(result));
 });
 
 export const playerRoutes = router;
