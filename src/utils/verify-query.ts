@@ -8,7 +8,7 @@ export const verifyQuery = (
     err: string
 ) => {
     if (query && parsedQuery === undefined) {
-        createError(res, 404, err);
+        createError(res, 400, err);
 
         return false;
     }
