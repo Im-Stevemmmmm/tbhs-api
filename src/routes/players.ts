@@ -2,7 +2,7 @@ import { Player } from "@prisma/client";
 import { isUUID } from "class-validator";
 import { NextFunction, Request, Response, Router } from "express";
 import { prisma, redis } from "../context";
-import { adminAuth, apiKeyAuth } from "../utils/auth-middleware";
+import { adminApiKeyAuth } from "../utils/auth-middleware";
 import { camelCaseKeys } from "../utils/camel-case-keys";
 import { createError } from "../utils/error";
 import { verifyQuery } from "../utils/verify-query";
@@ -23,61 +23,47 @@ const playerCache = async (
     return cachedValue ? res.send(JSON.parse(cachedValue)) : next();
 };
 
-router.get(
-    "/",
-    apiKeyAuth,
-    async ({ query: { rank } }: Request, res: Response) => {
-        const queryParams = {
-            rank: {
-                none: "none",
-                donor: "donor",
-            },
-        };
+router.get("/", async ({ query: { rank } }, res) => {
+    const queryParams = {
+        rank: {
+            none: "none",
+            donor: "donor",
+        },
+    };
 
-        const parsedRank = queryParams.rank[rank as string];
+    const parsedRank = queryParams.rank[rank as string];
 
-        if (
-            !verifyQuery(res, rank, parsedRank, "Rank must be none or donor.")
-        ) {
-            return;
-        }
-
-        const players = await prisma.player.findMany({
-            where: {
-                rank: parsedRank,
-            },
-        });
-
-        return res.send(players);
+    if (!verifyQuery(res, rank, parsedRank, "Rank must be none or donor.")) {
+        return;
     }
-);
 
-router.get(
-    "/:uuid",
-    [apiKeyAuth, playerCache],
-    async ({ params: { uuid } }: Request, res: Response) => {
-        const player = await prisma.player.findUnique({
-            where: {
-                uuid,
-            },
-        });
+    const players = await prisma.player.findMany({
+        where: {
+            rank: parsedRank,
+        },
+    });
 
-        if (!player) {
-            return createError(res, 404, "Player not found.");
-        }
+    return res.send(players);
+});
 
-        setPlayerCache(uuid, player);
+router.get("/:uuid", playerCache, async ({ params: { uuid } }, res) => {
+    const player = await prisma.player.findUnique({
+        where: {
+            uuid,
+        },
+    });
 
-        return res.send(player);
+    if (!player) {
+        return createError(res, 404, "Player not found.");
     }
-);
 
-interface PlayerPost {
-    uuid: string;
-}
+    setPlayerCache(uuid, player);
 
-router.post("/", adminAuth, async ({ body }: Request, res: Response) => {
-    const { uuid } = body as PlayerPost;
+    return res.send(player);
+});
+
+router.post("/", adminApiKeyAuth, async ({ body }, res) => {
+    const { uuid } = body as { uuid: string };
 
     if (!isUUID(uuid, "4")) {
         return createError(res, 422, "The uuid value must be a UUIDv4.");
@@ -96,6 +82,7 @@ router.post("/", adminAuth, async ({ body }: Request, res: Response) => {
     const result = await prisma.player.create({
         data: {
             uuid,
+            PitPlayerGold: { create: {} },
             PitDefensiveStats: { create: {} },
             PitFarmingStats: { create: {} },
             PitMiscellaneousStats: { create: {} },

@@ -1,7 +1,6 @@
-import { NextFunction, Request, Response } from "express";
 import argon from "argon2";
+import { NextFunction, Request, Response } from "express";
 import uuidApiKey from "uuid-apikey";
-import cors from "cors";
 import { prisma } from "../context";
 import { createError } from "./error";
 
@@ -103,10 +102,3 @@ export const adminApiKeyAuth = async (
 
     next();
 };
-
-export const adminAuth = [
-    adminApiKeyAuth,
-    cors({
-        origin: "http://localhost:4000",
-    }),
-];

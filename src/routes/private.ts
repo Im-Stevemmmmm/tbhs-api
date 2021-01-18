@@ -1,12 +1,11 @@
 import argon from "argon2";
-import { Request, Response, Router } from "express";
+import { Router } from "express";
 import uuidApiKey from "uuid-apikey";
 import { prisma } from "../context";
-import { adminAuth } from "../utils/auth-middleware";
 
 const router = Router();
 
-router.post("/api-key", adminAuth, async ({ body }: Request, res: Response) => {
+router.post("/api-key", async ({ body }, res) => {
     const { uuid } = body;
     const { apiKey, uuid: keyUuid } = uuidApiKey.create();
 
