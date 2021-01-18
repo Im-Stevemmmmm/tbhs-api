@@ -2,15 +2,17 @@ import { Prisma } from "@prisma/client";
 import { isUUID } from "class-validator";
 import { Router } from "express";
 import { prisma } from "../../../context";
-import { adminApiKeyAuth, apiKeyAuth } from "../../../utils/auth-middleware";
-import { camelCaseKeys } from "../../../utils/camel-case-keys";
+import { adminApiKeyAuth } from "../../../utils/auth-middleware";
 import { createError } from "../../../utils/error";
+import { checkPlayerExistance } from "../../../utils/middleware/player-existance";
 import { formatPitResponse } from "../../../utils/the-pit/format-response";
 
 const router = Router();
 
+router.use("/:uuid", checkPlayerExistance);
+
 interface Types {
-    [x: string]: { key: keyof Prisma.PlayerSelect; delegate: any };
+    [key: string]: { key: keyof Prisma.PlayerSelect; delegate: any };
 }
 
 const types: Types = {
@@ -39,9 +41,40 @@ const getAvailabieStats = () => {
     return `${keys.join(", ")} or ${finalKey}`;
 };
 
+router.get("/:uuid", async ({ params: { uuid } }, res) => {
+    const {
+        Player: {
+            PitPerformanceStats: { xp },
+            PitPrestigeStats: { prestige },
+        },
+        ...rest
+    } = await prisma.pitPlayerGold.findUnique({
+        where: {
+            playerUuid: uuid,
+        },
+        include: {
+            Player: {
+                select: {
+                    PitPerformanceStats: {
+                        select: {
+                            xp: true,
+                        },
+                    },
+                    PitPrestigeStats: {
+                        select: {
+                            prestige: true,
+                        },
+                    },
+                },
+            },
+        },
+    });
+
+    return res.send({ ...rest, xp, prestige });
+});
+
 router.get(
-    "/:uuid",
-    apiKeyAuth,
+    "/:uuid/stats",
     async ({ params: { uuid }, query: { type } }, res) => {
         if (!uuid) {
             return createError(res, 404, "No UUID provided.");
@@ -81,7 +114,7 @@ router.get(
             return res.send(formatPitResponse(data));
         }
 
-        const selectionObject: Prisma.PlayerSelect = {};
+        const selectionObject = {};
 
         Object.keys(types).forEach(
             k => (selectionObject[types[k].key as string] = true)
@@ -94,10 +127,6 @@ router.get(
             select: selectionObject,
         });
 
-        if (!data) {
-            return createError(res, 404, "Player not found.");
-        }
-
         return res.send(formatPitResponse(data));
     }
 );
@@ -108,7 +137,7 @@ interface UpdateStatsBody {
 }
 
 router.put(
-    "/:uuid",
+    "/:uuid/stats",
     adminApiKeyAuth,
     async ({ body, params: { uuid } }, res) => {
         try {
