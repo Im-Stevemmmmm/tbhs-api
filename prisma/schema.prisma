@@ -120,6 +120,7 @@ model Player {
   PitOffensiveStats      PitOffensiveStats?
   PitPerformanceStats    PitPerformanceStats?
   PitPerksAndMysticStats PitPerksAndMysticStats?
+  PitPlayerGold          PitPlayerGold?
   PitPrestigeStats       PitPrestigeStats?
 }
 
@@ -144,5 +145,12 @@ model GenericApiKey {
   playerUuid String @unique
   key        String @unique
   uuid       String @unique
+  Player     Player @relation(fields: [playerUuid], references: [uuid])
+}
+
+model PitPlayerGold {
+  id         Int    @id @default(autoincrement())
+  playerUuid String @unique
+  gold       Float  @default(0)
   Player     Player @relation(fields: [playerUuid], references: [uuid])
 }
