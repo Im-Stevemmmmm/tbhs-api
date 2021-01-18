@@ -13,10 +13,10 @@ interface ApiKeyCheckResult {
 }
 
 const apiKeyCheck = async (
-    qKey: unknown,
+    key: string,
     delegate: any
 ): Promise<ApiKeyCheckResult> => {
-    if (!qKey) {
+    if (!key) {
         return {
             successful: false,
             errorObject: {
@@ -26,7 +26,6 @@ const apiKeyCheck = async (
         };
     }
 
-    const key = qKey as string;
     const keyUuid = uuidApiKey.toUUID(key);
 
     const keyResult = await delegate.findUnique({
@@ -65,19 +64,30 @@ const apiKeyCheck = async (
     };
 };
 
+const getKey = ({
+    query: { key },
+    headers: { "x-api-key": apiKeyHeader },
+}: Request) => {
+    const inKey = key ? key : apiKeyHeader;
+
+    return Array.isArray(inKey) ? (inKey[0] as string) : (inKey as string);
+};
+
 export const apiKeyAuth = async (
-    { query: { key: qKey } }: Request,
+    req: Request,
     res: Response,
     next: NextFunction
 ) => {
+    const key = getKey(req);
+
     const { successful: genericSuccess } = await apiKeyCheck(
-        qKey,
+        key,
         prisma.genericApiKey
     );
 
     if (!genericSuccess) {
         const { successful, errorObject } = await apiKeyCheck(
-            qKey,
+            key,
             prisma.adminApiKey
         );
 
@@ -90,11 +100,13 @@ export const apiKeyAuth = async (
 };
 
 export const adminApiKeyAuth = async (
-    { query: { key: qKey } }: Request,
+    req: Request,
     res: Response,
     next: NextFunction
 ) => {
-    const { successful } = await apiKeyCheck(qKey, prisma.adminApiKey);
+    const key = getKey(req);
+
+    const { successful } = await apiKeyCheck(key, prisma.adminApiKey);
 
     if (!successful) {
         return createError(res, 403, "Unauthorized action.");
