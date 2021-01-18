@@ -44,7 +44,7 @@ const apiKeyCheck = async (
             successful: false,
             errorObject: {
                 error: 409,
-                message: "Invalid UUID key.",
+                message: "API key not found.",
             },
         };
     }
@@ -98,9 +98,7 @@ export const adminApiKeyAuth = async (
     const { successful } = await apiKeyCheck(qKey, prisma.adminApiKey);
 
     if (!successful) {
-        return res
-            .status(403)
-            .send({ error: 403, message: "Unauthorized action." });
+        return createError(res, 403, "Unauthorized action.");
     }
 
     next();
@@ -109,15 +107,6 @@ export const adminApiKeyAuth = async (
 export const adminAuth = [
     adminApiKeyAuth,
     cors({
-        origin: "http://http://localhost:4000",
+        origin: "http://localhost:4000",
     }),
 ];
-
-prisma.adminApiKey.findUnique({
-    where: {
-        uuid: "",
-    },
-    select: {
-        key: true,
-    },
-});
