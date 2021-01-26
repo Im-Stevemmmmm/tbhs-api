@@ -6,7 +6,7 @@
     "author": "Esteban Garcia <estebangarcia2121@gmail.com>",
     "license": "MIT",
     "dependencies": {
-        "@prisma/client": "^2.14.0",
+        "@prisma/client": "^2.15.0",
         "argon2": "^0.27.1",
         "class-validator": "^0.13.1",
         "cors": "^2.8.5",
@@ -15,7 +15,7 @@
         "uuid-apikey": "^1.5.1"
     },
     "devDependencies": {
-        "@prisma/cli": "^2.14.0",
+        "@prisma/cli": "^2.15.0",
         "@types/argon2": "^0.15.0",
         "@types/cors": "^2.8.9",
         "@types/express": "^4.17.11",
