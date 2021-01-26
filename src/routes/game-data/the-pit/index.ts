@@ -73,6 +73,29 @@ router.get("/:uuid", async ({ params: { uuid } }, res) => {
     return res.send({ ...rest, xp, prestige });
 });
 
+router.put("/:uuid", async ({ params: { uuid }, body }, res) => {
+    if (!body) {
+        return createError(res, 409, "No body found.");
+    }
+
+    const { gold } = body;
+
+    if (!gold) {
+        return createError(res, 409, "No gold key found.");
+    }
+
+    const result = await prisma.pitPlayerGold.update({
+        where: {
+            playerUuid: uuid,
+        },
+        data: {
+            gold,
+        },
+    });
+
+    return res.send(result);
+});
+
 router.get(
     "/:uuid/stats",
     async ({ params: { uuid }, query: { type } }, res) => {
