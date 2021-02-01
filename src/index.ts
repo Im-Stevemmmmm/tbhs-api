@@ -4,14 +4,14 @@ import { isUUID } from "class-validator";
 import "dotenv/config";
 import express from "express";
 import { applyMiddleware } from "graphql-middleware";
-import { and, shield } from "graphql-shield";
+import { shield } from "graphql-shield";
 import { makeSchema } from "nexus";
 import path from "path";
 import { Client } from "pg";
 import uuidApiKey from "uuid-apikey";
 import { isAdminAuthenticated, isAuthenticated } from "./authentication-rules";
 import { GameStatsObject } from "./models/GameStats";
-import { PitStatsObject } from "./models/PitStats";
+import { introspectObject, PitStatsObject, stats } from "./models/PitStats";
 import { PlayerObject } from "./models/Player";
 import { ServerContext } from "./server-context";
 
@@ -24,8 +24,12 @@ const main = async () => {
 
     const app = express();
 
+    const pitStatsObjects = await Promise.all(
+        stats.map(async s => await introspectObject(s, client))
+    );
+
     const schema = makeSchema({
-        types: [PlayerObject, GameStatsObject, PitStatsObject],
+        types: [PlayerObject, GameStatsObject, PitStatsObject, pitStatsObjects],
         outputs: {
             schema: path.join(__dirname, "../src/generated/schema.graphql"),
             typegen: path.join(__dirname, "../src/generated/nexus.ts"),
@@ -54,12 +58,10 @@ const main = async () => {
             }
 
             const apiKey = apiKeyHeader.split(" ")[1];
-
             let uuid: string;
 
             try {
                 uuid = uuidApiKey.toUUID(apiKey);
-
                 if (!isUUID(uuid)) {
                     return ctx;
                 }
@@ -74,7 +76,6 @@ const main = async () => {
                 );
 
                 const row = result.rows[0];
-
                 if (!row) {
                     return false;
                 }
@@ -83,7 +84,6 @@ const main = async () => {
             };
 
             const genericKeyCheck = await checkKey("Generic");
-
             if (!genericKeyCheck) {
                 const adminKeyCheck = await checkKey("Admin");
 

@@ -1,10 +1,19 @@
 import { isUUID } from "class-validator";
 import { objectType } from "nexus";
 import { ObjectDefinitionBlock } from "nexus/dist/core";
+import { Client } from "pg";
 import { playerUuidSourceType } from ".";
 import { PlayerUuid } from "../source-types/player-uuid-type";
 
-const stats = ["offensive", "defensive", "farming"];
+export const stats = [
+    "defensive",
+    "farming",
+    "miscellaneous",
+    "offensive",
+    "performance",
+    "perksAndMystic",
+    "prestige",
+];
 
 export const PitStats = objectType({
     name: "PitStats",
@@ -36,51 +45,59 @@ const createField = (_: ObjectDefinitionBlock<any>, name: string) => {
     });
 };
 
-const commonFields = (_: ObjectDefinitionBlock<any>) => {
-    _.int("id");
-    _.string("playerUuid");
+export const introspectObject = async (stat: string, client: Client) => {
+    const typeName = stat.charAt(0).toUpperCase() + stat.slice(1);
+
+    console.log(typeName);
+
+    const result = await client.query<{
+        column_name: string;
+        data_type: string;
+    }>(
+        `SELECT column_name, data_type FROM information_schema.columns WHERE table_schema = 'pit' AND table_name = '${typeName}Stats';`
+    );
+
+    const rowTypeMap: {
+        [key: string]: (o: ObjectDefinitionBlock<any>, n: string) => void;
+    } = {
+        text: (o, n) => o.string(n),
+        integer: (o, n) => o.int(n),
+        numeric: (o, n) => o.float(n),
+    };
+
+    const gqlObject = objectType({
+        name: typeName,
+        definition(_) {
+            _.int("id");
+            _.string("playerUuid");
+
+            result.rows.forEach(row => {
+                const rowType = rowTypeMap[row.data_type];
+
+                rowType(_, row.column_name);
+            });
+        },
+    });
+
+    const mutationObject = objectType({
+        name: `Update${typeName}Stats`,
+        definition(_) {
+            result.rows.forEach(row => {
+                const rowType = rowTypeMap[row.data_type];
+
+                if (
+                    row.column_name !== "id" &&
+                    row.column_name !== "playerUuid"
+                ) {
+                    rowType(_, row.column_name);
+                }
+            });
+        },
+    });
+
+    // TODO add resolver
+
+    return [gqlObject, mutationObject];
 };
 
-const Offensive = objectType({
-    name: "Offensive",
-    definition(_) {
-        commonFields(_);
-        _.int("kills");
-        _.int("assists");
-        _.int("swordHits");
-        _.int("arrowsShot");
-        _.int("arrowsHit");
-        _.float("damageDealt");
-        _.float("meleeDamageDealt");
-        _.float("bowDamageDealt");
-        _.int("highestStreak");
-    },
-});
-
-const Defensive = objectType({
-    name: "Defensive",
-    definition(_) {
-        commonFields(_);
-        _.int("deaths");
-        _.float("damageTaken");
-        _.float("meleeDamageTaken");
-        _.float("bowDamageTaken");
-    },
-});
-
-const Farming = objectType({
-    name: "Farming",
-    definition(_) {
-        commonFields(_);
-        _.int("wheatFarmed");
-        _.int("fishedAnything");
-        _.int("fishedFish");
-        _.int("fishSold");
-        _.int("hayBalesSold");
-        _.int("kingsQuestCompleted");
-        _.int("sewerTreasuresFound");
-        _.int("nightQuestsCompleted");
-    },
-});
-
-export const PitStatsObject = [PitStats, Offensive, Defensive, Farming];
+export const PitStatsObject = [PitStats];

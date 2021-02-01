@@ -28,6 +28,22 @@ type GameStats {
   pit: PitStats
 }
 
+type Miscellaneous {
+  blocksBroken: Int
+  blocksPlaced: Int
+  chatMessages: Int
+  dailyTradeLimits: Int
+  diamondItemsPurchased: Int
+  genisisPoints: Int
+  goldTradeLimits: Int
+  id: Int
+  jumpsIntoPit: Int
+  launcherLaunches: Int
+  leftClicks: Int
+  playerUuid: String
+  playtime: Float
+}
+
 type Mutation {
   registerPlayer(uuid: String!): RegistrationResponse
 }
@@ -46,10 +62,44 @@ type Offensive {
   swordHits: Int
 }
 
+type Performance {
+  bowAccuracy: Float
+  contractsCompleted: Int
+  contractsStarted: Int
+  damageDealtOverTakenRatio: Float
+  goldEarned: Float
+  goldPerHour: Float
+  id: Int
+  killDeathPlusAssistRatio: Float
+  killDeathRatio: Float
+  killsAndAssistsPerHour: Float
+  playerUuid: String
+  xp: Float
+  xpPerHour: Float
+}
+
+type PerksAndMystic {
+  darkPantsEnchanted: Int
+  fishingRodsLaunched: Int
+  goldenApplesEaten: Int
+  goldenHeadsEaten: Int
+  id: Int
+  lavaBucketsEmptied: Int
+  playerUuid: String
+  soupsDrank: Int
+  tierOneMysticsEnchanted: Int
+  tierThreeMysticsEnchanted: Int
+  tierTwoMysticsEnchanted: Int
+}
+
 type PitStats {
   defensive: Defensive
   farming: Farming
+  miscellaneous: Miscellaneous
   offensive: Offensive
+  performance: Performance
+  perksAndMystic: PerksAndMystic
+  prestige: Prestige
 }
 
 type Player {
@@ -58,6 +108,15 @@ type Player {
   lastJoin: String
   rank: String
   uuid: String
+}
+
+type Prestige {
+  currentRenown: Int
+  id: Int
+  lifetimeRenown: Int
+  playerUuid: String
+  prestige: Int
+  renownShopCompletion: Int
 }
 
 type Query {
@@ -78,4 +137,81 @@ enum RegistrationErrorName {
 type RegistrationResponse {
   error: RegistrationError
   player: Player
+}
+
+type UpdateDefensiveStats {
+  bowDamageTaken: Float
+  damageTaken: Float
+  deaths: Int
+  meleeDamageTaken: Float
+}
+
+type UpdateFarmingStats {
+  fishSold: Int
+  fishedAnything: Int
+  fishedFish: Int
+  hayBalesSold: Int
+  kingsQuestCompleted: Int
+  nightQuestsCompleted: Int
+  sewerTreasuresFound: Int
+  wheatFarmed: Int
+}
+
+type UpdateMiscellaneousStats {
+  blocksBroken: Int
+  blocksPlaced: Int
+  chatMessages: Int
+  dailyTradeLimits: Int
+  diamondItemsPurchased: Int
+  genisisPoints: Int
+  goldTradeLimits: Int
+  jumpsIntoPit: Int
+  launcherLaunches: Int
+  leftClicks: Int
+  playtime: Float
+}
+
+type UpdateOffensiveStats {
+  arrowsHit: Int
+  arrowsShot: Int
+  assists: Int
+  bowDamageDealt: Float
+  damageDealt: Float
+  highestStreak: Int
+  kills: Int
+  meleeDamageDealt: Float
+  swordHits: Int
+}
+
+type UpdatePerformanceStats {
+  bowAccuracy: Float
+  contractsCompleted: Int
+  contractsStarted: Int
+  damageDealtOverTakenRatio: Float
+  goldEarned: Float
+  goldPerHour: Float
+  killDeathPlusAssistRatio: Float
+  killDeathRatio: Float
+  killsAndAssistsPerHour: Float
+  xp: Float
+  xpPerHour: Float
+}
+
+type UpdatePerksAndMysticStats {
+  darkPantsEnchanted: Int
+  fishingRodsLaunched: Int
+  goldenApplesEaten: Int
+  goldenHeadsEaten: Int
+  lavaBucketsEmptied: Int
+  soupsDrank: Int
+  tierOneMysticsEnchanted: Int
+  tierThreeMysticsEnchanted: Int
+  tierTwoMysticsEnchanted: Int
+}
+
+type UpdatePrestigeStats {
+  currentRenown: Int
+  lifetimeRenown: Int
+  prestige: Int
+  renownShopCompletion: Int
 }

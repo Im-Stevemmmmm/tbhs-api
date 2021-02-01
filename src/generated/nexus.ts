@@ -50,6 +50,21 @@ export interface NexusGenObjects {
     wheatFarmed?: number | null; // Int
   }
   GameStats: { playerUuid: string };
+  Miscellaneous: { // root type
+    blocksBroken?: number | null; // Int
+    blocksPlaced?: number | null; // Int
+    chatMessages?: number | null; // Int
+    dailyTradeLimits?: number | null; // Int
+    diamondItemsPurchased?: number | null; // Int
+    genisisPoints?: number | null; // Int
+    goldTradeLimits?: number | null; // Int
+    id?: number | null; // Int
+    jumpsIntoPit?: number | null; // Int
+    launcherLaunches?: number | null; // Int
+    leftClicks?: number | null; // Int
+    playerUuid?: string | null; // String
+    playtime?: number | null; // Float
+  }
   Mutation: {};
   Offensive: { // root type
     arrowsHit?: number | null; // Int
@@ -64,12 +79,48 @@ export interface NexusGenObjects {
     playerUuid?: string | null; // String
     swordHits?: number | null; // Int
   }
+  Performance: { // root type
+    bowAccuracy?: number | null; // Float
+    contractsCompleted?: number | null; // Int
+    contractsStarted?: number | null; // Int
+    damageDealtOverTakenRatio?: number | null; // Float
+    goldEarned?: number | null; // Float
+    goldPerHour?: number | null; // Float
+    id?: number | null; // Int
+    killDeathPlusAssistRatio?: number | null; // Float
+    killDeathRatio?: number | null; // Float
+    killsAndAssistsPerHour?: number | null; // Float
+    playerUuid?: string | null; // String
+    xp?: number | null; // Float
+    xpPerHour?: number | null; // Float
+  }
+  PerksAndMystic: { // root type
+    darkPantsEnchanted?: number | null; // Int
+    fishingRodsLaunched?: number | null; // Int
+    goldenApplesEaten?: number | null; // Int
+    goldenHeadsEaten?: number | null; // Int
+    id?: number | null; // Int
+    lavaBucketsEmptied?: number | null; // Int
+    playerUuid?: string | null; // String
+    soupsDrank?: number | null; // Int
+    tierOneMysticsEnchanted?: number | null; // Int
+    tierThreeMysticsEnchanted?: number | null; // Int
+    tierTwoMysticsEnchanted?: number | null; // Int
+  }
   PitStats: { playerUuid: string };
   Player: { // root type
     joinedAt?: string | null; // String
     lastJoin?: string | null; // String
     rank?: string | null; // String
     uuid?: string | null; // String
+  }
+  Prestige: { // root type
+    currentRenown?: number | null; // Int
+    id?: number | null; // Int
+    lifetimeRenown?: number | null; // Int
+    playerUuid?: string | null; // String
+    prestige?: number | null; // Int
+    renownShopCompletion?: number | null; // Int
   }
   Query: {};
   RegistrationError: { // root type
@@ -79,6 +130,76 @@ export interface NexusGenObjects {
   RegistrationResponse: { // root type
     error?: NexusGenRootTypes['RegistrationError'] | null; // RegistrationError
     player?: NexusGenRootTypes['Player'] | null; // Player
+  }
+  UpdateDefensiveStats: { // root type
+    bowDamageTaken?: number | null; // Float
+    damageTaken?: number | null; // Float
+    deaths?: number | null; // Int
+    meleeDamageTaken?: number | null; // Float
+  }
+  UpdateFarmingStats: { // root type
+    fishSold?: number | null; // Int
+    fishedAnything?: number | null; // Int
+    fishedFish?: number | null; // Int
+    hayBalesSold?: number | null; // Int
+    kingsQuestCompleted?: number | null; // Int
+    nightQuestsCompleted?: number | null; // Int
+    sewerTreasuresFound?: number | null; // Int
+    wheatFarmed?: number | null; // Int
+  }
+  UpdateMiscellaneousStats: { // root type
+    blocksBroken?: number | null; // Int
+    blocksPlaced?: number | null; // Int
+    chatMessages?: number | null; // Int
+    dailyTradeLimits?: number | null; // Int
+    diamondItemsPurchased?: number | null; // Int
+    genisisPoints?: number | null; // Int
+    goldTradeLimits?: number | null; // Int
+    jumpsIntoPit?: number | null; // Int
+    launcherLaunches?: number | null; // Int
+    leftClicks?: number | null; // Int
+    playtime?: number | null; // Float
+  }
+  UpdateOffensiveStats: { // root type
+    arrowsHit?: number | null; // Int
+    arrowsShot?: number | null; // Int
+    assists?: number | null; // Int
+    bowDamageDealt?: number | null; // Float
+    damageDealt?: number | null; // Float
+    highestStreak?: number | null; // Int
+    kills?: number | null; // Int
+    meleeDamageDealt?: number | null; // Float
+    swordHits?: number | null; // Int
+  }
+  UpdatePerformanceStats: { // root type
+    bowAccuracy?: number | null; // Float
+    contractsCompleted?: number | null; // Int
+    contractsStarted?: number | null; // Int
+    damageDealtOverTakenRatio?: number | null; // Float
+    goldEarned?: number | null; // Float
+    goldPerHour?: number | null; // Float
+    killDeathPlusAssistRatio?: number | null; // Float
+    killDeathRatio?: number | null; // Float
+    killsAndAssistsPerHour?: number | null; // Float
+    xp?: number | null; // Float
+    xpPerHour?: number | null; // Float
+  }
+  UpdatePerksAndMysticStats: { // root type
+    darkPantsEnchanted?: number | null; // Int
+    fishingRodsLaunched?: number | null; // Int
+    goldenApplesEaten?: number | null; // Int
+    goldenHeadsEaten?: number | null; // Int
+    lavaBucketsEmptied?: number | null; // Int
+    soupsDrank?: number | null; // Int
+    tierOneMysticsEnchanted?: number | null; // Int
+    tierThreeMysticsEnchanted?: number | null; // Int
+    tierTwoMysticsEnchanted?: number | null; // Int
+  }
+  UpdatePrestigeStats: { // root type
+    currentRenown?: number | null; // Int
+    lifetimeRenown?: number | null; // Int
+    prestige?: number | null; // Int
+    renownShopCompletion?: number | null; // Int
   }
 }
 
@@ -116,6 +237,21 @@ export interface NexusGenFieldTypes {
   GameStats: { // field return type
     pit: NexusGenRootTypes['PitStats'] | null; // PitStats
   }
+  Miscellaneous: { // field return type
+    blocksBroken: number | null; // Int
+    blocksPlaced: number | null; // Int
+    chatMessages: number | null; // Int
+    dailyTradeLimits: number | null; // Int
+    diamondItemsPurchased: number | null; // Int
+    genisisPoints: number | null; // Int
+    goldTradeLimits: number | null; // Int
+    id: number | null; // Int
+    jumpsIntoPit: number | null; // Int
+    launcherLaunches: number | null; // Int
+    leftClicks: number | null; // Int
+    playerUuid: string | null; // String
+    playtime: number | null; // Float
+  }
   Mutation: { // field return type
     registerPlayer: NexusGenRootTypes['RegistrationResponse'] | null; // RegistrationResponse
   }
@@ -132,10 +268,42 @@ export interface NexusGenFieldTypes {
     playerUuid: string | null; // String
     swordHits: number | null; // Int
   }
+  Performance: { // field return type
+    bowAccuracy: number | null; // Float
+    contractsCompleted: number | null; // Int
+    contractsStarted: number | null; // Int
+    damageDealtOverTakenRatio: number | null; // Float
+    goldEarned: number | null; // Float
+    goldPerHour: number | null; // Float
+    id: number | null; // Int
+    killDeathPlusAssistRatio: number | null; // Float
+    killDeathRatio: number | null; // Float
+    killsAndAssistsPerHour: number | null; // Float
+    playerUuid: string | null; // String
+    xp: number | null; // Float
+    xpPerHour: number | null; // Float
+  }
+  PerksAndMystic: { // field return type
+    darkPantsEnchanted: number | null; // Int
+    fishingRodsLaunched: number | null; // Int
+    goldenApplesEaten: number | null; // Int
+    goldenHeadsEaten: number | null; // Int
+    id: number | null; // Int
+    lavaBucketsEmptied: number | null; // Int
+    playerUuid: string | null; // String
+    soupsDrank: number | null; // Int
+    tierOneMysticsEnchanted: number | null; // Int
+    tierThreeMysticsEnchanted: number | null; // Int
+    tierTwoMysticsEnchanted: number | null; // Int
+  }
   PitStats: { // field return type
     defensive: NexusGenRootTypes['Defensive'] | null; // Defensive
     farming: NexusGenRootTypes['Farming'] | null; // Farming
+    miscellaneous: NexusGenRootTypes['Miscellaneous'] | null; // Miscellaneous
     offensive: NexusGenRootTypes['Offensive'] | null; // Offensive
+    performance: NexusGenRootTypes['Performance'] | null; // Performance
+    perksAndMystic: NexusGenRootTypes['PerksAndMystic'] | null; // PerksAndMystic
+    prestige: NexusGenRootTypes['Prestige'] | null; // Prestige
   }
   Player: { // field return type
     gameStats: NexusGenRootTypes['GameStats'] | null; // GameStats
@@ -143,6 +311,14 @@ export interface NexusGenFieldTypes {
     lastJoin: string | null; // String
     rank: string | null; // String
     uuid: string | null; // String
+  }
+  Prestige: { // field return type
+    currentRenown: number | null; // Int
+    id: number | null; // Int
+    lifetimeRenown: number | null; // Int
+    playerUuid: string | null; // String
+    prestige: number | null; // Int
+    renownShopCompletion: number | null; // Int
   }
   Query: { // field return type
     player: NexusGenRootTypes['Player'] | null; // Player
@@ -155,6 +331,76 @@ export interface NexusGenFieldTypes {
   RegistrationResponse: { // field return type
     error: NexusGenRootTypes['RegistrationError'] | null; // RegistrationError
     player: NexusGenRootTypes['Player'] | null; // Player
+  }
+  UpdateDefensiveStats: { // field return type
+    bowDamageTaken: number | null; // Float
+    damageTaken: number | null; // Float
+    deaths: number | null; // Int
+    meleeDamageTaken: number | null; // Float
+  }
+  UpdateFarmingStats: { // field return type
+    fishSold: number | null; // Int
+    fishedAnything: number | null; // Int
+    fishedFish: number | null; // Int
+    hayBalesSold: number | null; // Int
+    kingsQuestCompleted: number | null; // Int
+    nightQuestsCompleted: number | null; // Int
+    sewerTreasuresFound: number | null; // Int
+    wheatFarmed: number | null; // Int
+  }
+  UpdateMiscellaneousStats: { // field return type
+    blocksBroken: number | null; // Int
+    blocksPlaced: number | null; // Int
+    chatMessages: number | null; // Int
+    dailyTradeLimits: number | null; // Int
+    diamondItemsPurchased: number | null; // Int
+    genisisPoints: number | null; // Int
+    goldTradeLimits: number | null; // Int
+    jumpsIntoPit: number | null; // Int
+    launcherLaunches: number | null; // Int
+    leftClicks: number | null; // Int
+    playtime: number | null; // Float
+  }
+  UpdateOffensiveStats: { // field return type
+    arrowsHit: number | null; // Int
+    arrowsShot: number | null; // Int
+    assists: number | null; // Int
+    bowDamageDealt: number | null; // Float
+    damageDealt: number | null; // Float
+    highestStreak: number | null; // Int
+    kills: number | null; // Int
+    meleeDamageDealt: number | null; // Float
+    swordHits: number | null; // Int
+  }
+  UpdatePerformanceStats: { // field return type
+    bowAccuracy: number | null; // Float
+    contractsCompleted: number | null; // Int
+    contractsStarted: number | null; // Int
+    damageDealtOverTakenRatio: number | null; // Float
+    goldEarned: number | null; // Float
+    goldPerHour: number | null; // Float
+    killDeathPlusAssistRatio: number | null; // Float
+    killDeathRatio: number | null; // Float
+    killsAndAssistsPerHour: number | null; // Float
+    xp: number | null; // Float
+    xpPerHour: number | null; // Float
+  }
+  UpdatePerksAndMysticStats: { // field return type
+    darkPantsEnchanted: number | null; // Int
+    fishingRodsLaunched: number | null; // Int
+    goldenApplesEaten: number | null; // Int
+    goldenHeadsEaten: number | null; // Int
+    lavaBucketsEmptied: number | null; // Int
+    soupsDrank: number | null; // Int
+    tierOneMysticsEnchanted: number | null; // Int
+    tierThreeMysticsEnchanted: number | null; // Int
+    tierTwoMysticsEnchanted: number | null; // Int
+  }
+  UpdatePrestigeStats: { // field return type
+    currentRenown: number | null; // Int
+    lifetimeRenown: number | null; // Int
+    prestige: number | null; // Int
+    renownShopCompletion: number | null; // Int
   }
 }
 
@@ -182,6 +428,21 @@ export interface NexusGenFieldTypeNames {
   GameStats: { // field return type name
     pit: 'PitStats'
   }
+  Miscellaneous: { // field return type name
+    blocksBroken: 'Int'
+    blocksPlaced: 'Int'
+    chatMessages: 'Int'
+    dailyTradeLimits: 'Int'
+    diamondItemsPurchased: 'Int'
+    genisisPoints: 'Int'
+    goldTradeLimits: 'Int'
+    id: 'Int'
+    jumpsIntoPit: 'Int'
+    launcherLaunches: 'Int'
+    leftClicks: 'Int'
+    playerUuid: 'String'
+    playtime: 'Float'
+  }
   Mutation: { // field return type name
     registerPlayer: 'RegistrationResponse'
   }
@@ -198,10 +459,42 @@ export interface NexusGenFieldTypeNames {
     playerUuid: 'String'
     swordHits: 'Int'
   }
+  Performance: { // field return type name
+    bowAccuracy: 'Float'
+    contractsCompleted: 'Int'
+    contractsStarted: 'Int'
+    damageDealtOverTakenRatio: 'Float'
+    goldEarned: 'Float'
+    goldPerHour: 'Float'
+    id: 'Int'
+    killDeathPlusAssistRatio: 'Float'
+    killDeathRatio: 'Float'
+    killsAndAssistsPerHour: 'Float'
+    playerUuid: 'String'
+    xp: 'Float'
+    xpPerHour: 'Float'
+  }
+  PerksAndMystic: { // field return type name
+    darkPantsEnchanted: 'Int'
+    fishingRodsLaunched: 'Int'
+    goldenApplesEaten: 'Int'
+    goldenHeadsEaten: 'Int'
+    id: 'Int'
+    lavaBucketsEmptied: 'Int'
+    playerUuid: 'String'
+    soupsDrank: 'Int'
+    tierOneMysticsEnchanted: 'Int'
+    tierThreeMysticsEnchanted: 'Int'
+    tierTwoMysticsEnchanted: 'Int'
+  }
   PitStats: { // field return type name
     defensive: 'Defensive'
     farming: 'Farming'
+    miscellaneous: 'Miscellaneous'
     offensive: 'Offensive'
+    performance: 'Performance'
+    perksAndMystic: 'PerksAndMystic'
+    prestige: 'Prestige'
   }
   Player: { // field return type name
     gameStats: 'GameStats'
@@ -209,6 +502,14 @@ export interface NexusGenFieldTypeNames {
     lastJoin: 'String'
     rank: 'String'
     uuid: 'String'
+  }
+  Prestige: { // field return type name
+    currentRenown: 'Int'
+    id: 'Int'
+    lifetimeRenown: 'Int'
+    playerUuid: 'String'
+    prestige: 'Int'
+    renownShopCompletion: 'Int'
   }
   Query: { // field return type name
     player: 'Player'
@@ -221,6 +522,76 @@ export interface NexusGenFieldTypeNames {
   RegistrationResponse: { // field return type name
     error: 'RegistrationError'
     player: 'Player'
+  }
+  UpdateDefensiveStats: { // field return type name
+    bowDamageTaken: 'Float'
+    damageTaken: 'Float'
+    deaths: 'Int'
+    meleeDamageTaken: 'Float'
+  }
+  UpdateFarmingStats: { // field return type name
+    fishSold: 'Int'
+    fishedAnything: 'Int'
+    fishedFish: 'Int'
+    hayBalesSold: 'Int'
+    kingsQuestCompleted: 'Int'
+    nightQuestsCompleted: 'Int'
+    sewerTreasuresFound: 'Int'
+    wheatFarmed: 'Int'
+  }
+  UpdateMiscellaneousStats: { // field return type name
+    blocksBroken: 'Int'
+    blocksPlaced: 'Int'
+    chatMessages: 'Int'
+    dailyTradeLimits: 'Int'
+    diamondItemsPurchased: 'Int'
+    genisisPoints: 'Int'
+    goldTradeLimits: 'Int'
+    jumpsIntoPit: 'Int'
+    launcherLaunches: 'Int'
+    leftClicks: 'Int'
+    playtime: 'Float'
+  }
+  UpdateOffensiveStats: { // field return type name
+    arrowsHit: 'Int'
+    arrowsShot: 'Int'
+    assists: 'Int'
+    bowDamageDealt: 'Float'
+    damageDealt: 'Float'
+    highestStreak: 'Int'
+    kills: 'Int'
+    meleeDamageDealt: 'Float'
+    swordHits: 'Int'
+  }
+  UpdatePerformanceStats: { // field return type name
+    bowAccuracy: 'Float'
+    contractsCompleted: 'Int'
+    contractsStarted: 'Int'
+    damageDealtOverTakenRatio: 'Float'
+    goldEarned: 'Float'
+    goldPerHour: 'Float'
+    killDeathPlusAssistRatio: 'Float'
+    killDeathRatio: 'Float'
+    killsAndAssistsPerHour: 'Float'
+    xp: 'Float'
+    xpPerHour: 'Float'
+  }
+  UpdatePerksAndMysticStats: { // field return type name
+    darkPantsEnchanted: 'Int'
+    fishingRodsLaunched: 'Int'
+    goldenApplesEaten: 'Int'
+    goldenHeadsEaten: 'Int'
+    lavaBucketsEmptied: 'Int'
+    soupsDrank: 'Int'
+    tierOneMysticsEnchanted: 'Int'
+    tierThreeMysticsEnchanted: 'Int'
+    tierTwoMysticsEnchanted: 'Int'
+  }
+  UpdatePrestigeStats: { // field return type name
+    currentRenown: 'Int'
+    lifetimeRenown: 'Int'
+    prestige: 'Int'
+    renownShopCompletion: 'Int'
   }
 }
 
