@@ -28,7 +28,32 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Defensive: { // root type
+    bowDamageTaken?: number | null; // Float
+    damageTaken?: number | null; // Float
+    deaths?: number | null; // Int
+    meleeDamageTaken?: number | null; // Float
+    playerUuid?: string | null; // String
+  }
+  GameStats: { // root type
+    playerUuid?: string | null; // String
+  }
   Mutation: {};
+  Offensive: { // root type
+    arrowsHit?: number | null; // Int
+    arrowsShot?: number | null; // Int
+    assists?: number | null; // Int
+    bowDamageDealt?: number | null; // Float
+    damageDealt?: number | null; // Float
+    highestStreak?: number | null; // Int
+    kills?: number | null; // Int
+    meleeDamageDealt?: number | null; // Float
+    playerUuid?: string | null; // String
+    swordHits?: number | null; // Int
+  }
+  PitStats: { // root type
+    playerUuid?: string | null; // String
+  }
   Player: { // root type
     joinedAt?: string | null; // String
     lastJoin?: string | null; // String
@@ -49,31 +74,91 @@ export type NexusGenRootTypes = NexusGenObjects
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
+  Defensive: { // field return type
+    bowDamageTaken: number | null; // Float
+    damageTaken: number | null; // Float
+    deaths: number | null; // Int
+    meleeDamageTaken: number | null; // Float
+    playerUuid: string | null; // String
+  }
+  GameStats: { // field return type
+    pit: NexusGenRootTypes['PitStats'] | null; // PitStats
+    playerUuid: string | null; // String
+  }
   Mutation: { // field return type
     registerPlayer: NexusGenRootTypes['Player'] | null; // Player
   }
+  Offensive: { // field return type
+    arrowsHit: number | null; // Int
+    arrowsShot: number | null; // Int
+    assists: number | null; // Int
+    bowDamageDealt: number | null; // Float
+    damageDealt: number | null; // Float
+    highestStreak: number | null; // Int
+    kills: number | null; // Int
+    meleeDamageDealt: number | null; // Float
+    playerUuid: string | null; // String
+    swordHits: number | null; // Int
+  }
+  PitStats: { // field return type
+    defensive: NexusGenRootTypes['Defensive'] | null; // Defensive
+    offensive: NexusGenRootTypes['Offensive'] | null; // Offensive
+    playerUuid: string | null; // String
+  }
   Player: { // field return type
+    gameStats: NexusGenRootTypes['GameStats'] | null; // GameStats
     joinedAt: string | null; // String
     lastJoin: string | null; // String
     rank: string | null; // String
     uuid: string | null; // String
   }
   Query: { // field return type
+    player: NexusGenRootTypes['Player'] | null; // Player
     players: Array<NexusGenRootTypes['Player'] | null> | null; // [Player]
   }
 }
 
 export interface NexusGenFieldTypeNames {
+  Defensive: { // field return type name
+    bowDamageTaken: 'Float'
+    damageTaken: 'Float'
+    deaths: 'Int'
+    meleeDamageTaken: 'Float'
+    playerUuid: 'String'
+  }
+  GameStats: { // field return type name
+    pit: 'PitStats'
+    playerUuid: 'String'
+  }
   Mutation: { // field return type name
     registerPlayer: 'Player'
   }
+  Offensive: { // field return type name
+    arrowsHit: 'Int'
+    arrowsShot: 'Int'
+    assists: 'Int'
+    bowDamageDealt: 'Float'
+    damageDealt: 'Float'
+    highestStreak: 'Int'
+    kills: 'Int'
+    meleeDamageDealt: 'Float'
+    playerUuid: 'String'
+    swordHits: 'Int'
+  }
+  PitStats: { // field return type name
+    defensive: 'Defensive'
+    offensive: 'Offensive'
+    playerUuid: 'String'
+  }
   Player: { // field return type name
+    gameStats: 'GameStats'
     joinedAt: 'String'
     lastJoin: 'String'
     rank: 'String'
     uuid: 'String'
   }
   Query: { // field return type name
+    player: 'Player'
     players: 'Player'
   }
 }
@@ -81,6 +166,11 @@ export interface NexusGenFieldTypeNames {
 export interface NexusGenArgTypes {
   Mutation: {
     registerPlayer: { // args
+      uuid: string; // String!
+    }
+  }
+  Query: {
+    player: { // args
       uuid: string; // String!
     }
   }

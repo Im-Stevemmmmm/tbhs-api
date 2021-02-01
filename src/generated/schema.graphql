@@ -2,11 +2,44 @@
 ### Do not make changes to this file directly
 
 
+type Defensive {
+  bowDamageTaken: Float
+  damageTaken: Float
+  deaths: Int
+  meleeDamageTaken: Float
+  playerUuid: String
+}
+
+type GameStats {
+  pit: PitStats
+  playerUuid: String
+}
+
 type Mutation {
   registerPlayer(uuid: String!): Player
 }
 
+type Offensive {
+  arrowsHit: Int
+  arrowsShot: Int
+  assists: Int
+  bowDamageDealt: Float
+  damageDealt: Float
+  highestStreak: Int
+  kills: Int
+  meleeDamageDealt: Float
+  playerUuid: String
+  swordHits: Int
+}
+
+type PitStats {
+  defensive: Defensive
+  offensive: Offensive
+  playerUuid: String
+}
+
 type Player {
+  gameStats: GameStats
   joinedAt: String
   lastJoin: String
   rank: String
@@ -14,5 +47,6 @@ type Player {
 }
 
 type Query {
+  player(uuid: String!): Player
   players: [Player]
 }

@@ -1,24 +1,26 @@
 import { ApolloServer } from "apollo-server-express";
-import express from "express";
 import "dotenv/config";
+import express from "express";
 import { makeSchema } from "nexus";
+import path from "path";
+import { Client } from "pg";
+import { PitStatsObject } from "./models/PitStats";
+import { GameStatsObject } from "./models/GameStats";
 import { PlayerObject } from "./models/Player";
 import { ServerContext } from "./server-context";
-import { Client } from "pg";
-import path from "path";
-
-const client = new Client({
-    connectionString: process.env.DATABASE_URL,
-});
 
 const main = async () => {
+    const client = new Client({
+        connectionString: process.env.DATABASE_URL,
+    });
+
     await client.connect();
 
     const app = express();
 
     const apolloServer = new ApolloServer({
         schema: makeSchema({
-            types: [PlayerObject],
+            types: [PlayerObject, GameStatsObject, PitStatsObject],
             outputs: {
                 schema: path.join(__dirname, "../src/generated/schema.graphql"),
                 typegen: path.join(__dirname, "../src/generated/nexus.ts"),
@@ -30,7 +32,7 @@ const main = async () => {
     apolloServer.applyMiddleware({ app });
 
     app.listen(4000, () =>
-        console.log("graphql started at http://localhost:4000/graphql")
+        console.log("GraphQL server started at http://localhost:4000/graphql")
     );
 };
 
