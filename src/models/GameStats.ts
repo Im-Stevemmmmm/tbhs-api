@@ -1,10 +1,10 @@
 import { objectType } from "nexus";
+import { playerUuidSourceType } from ".";
 import { PitStats } from "./PitStats";
-import { playerUuidType } from "./player-uuid-type";
 
 export const GameStats = objectType({
     name: "GameStats",
-    sourceType: playerUuidType,
+    sourceType: playerUuidSourceType,
     definition(_) {
         _.field("pit", {
             type: PitStats,

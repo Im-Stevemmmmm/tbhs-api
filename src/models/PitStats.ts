@@ -1,44 +1,39 @@
 import { isUUID } from "class-validator";
 import { objectType } from "nexus";
 import { ObjectDefinitionBlock } from "nexus/dist/core";
-import { NexusGenObjects } from "../generated/nexus";
-import { ServerContext } from "../server-context";
-import { playerUuidType } from "./player-uuid-type";
+import { playerUuidSourceType } from ".";
+import { PlayerUuid } from "../source-types/player-uuid-type";
+
+const stats = ["offensive", "defensive", "farming"];
 
 export const PitStats = objectType({
     name: "PitStats",
-    sourceType: playerUuidType,
+    sourceType: playerUuidSourceType,
     definition(_) {
-        _.field("offensive", {
-            type: Offensive,
-            resolve: statsResolver("Offensive"),
-        });
-        _.field("defensive", {
-            type: Defensive,
-            resolve: statsResolver("Defensive"),
-        });
-        _.field("farming", {
-            type: Farming,
-            resolve: statsResolver("Farming"),
-        });
+        stats.forEach(s => createField(_, s));
     },
 });
 
-const statsResolver = (tableName: string) => async (
-    { playerUuid }: { playerUuid: string },
-    _: {},
-    { client }: ServerContext
-) => {
-    if (!isUUID(playerUuid, "4")) {
-        return null;
-    }
+const createField = (_: ObjectDefinitionBlock<any>, name: string) => {
+    const typeName = name.charAt(0).toUpperCase() + name.slice(1);
 
-    const result = await client.query<NexusGenObjects["Defensive"]>(
-        `SELECT * FROM pit."${tableName + "Stats"}" WHERE "playerUuid" = $1`,
-        [playerUuid]
-    );
+    _.field(name, {
+        type: typeName as any,
+        resolve: async ({ playerUuid }: PlayerUuid, _, { client }) => {
+            if (!isUUID(playerUuid, "4")) {
+                return null;
+            }
 
-    return result.rows[0];
+            const result = await client.query(
+                `SELECT * FROM pit."${
+                    typeName + "Stats"
+                }" WHERE "playerUuid" = $1`,
+                [playerUuid]
+            );
+
+            return result.rows[0];
+        },
+    });
 };
 
 const commonFields = (_: ObjectDefinitionBlock<any>) => {

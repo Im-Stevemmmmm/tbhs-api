@@ -4,7 +4,7 @@ import { isUUID } from "class-validator";
 import "dotenv/config";
 import express from "express";
 import { applyMiddleware } from "graphql-middleware";
-import { and, rule, shield } from "graphql-shield";
+import { shield } from "graphql-shield";
 import { makeSchema } from "nexus";
 import path from "path";
 import { Client } from "pg";
