@@ -29,7 +29,7 @@ type GameStats {
 }
 
 type Mutation {
-  registerPlayer(uuid: String!): Player
+  registerPlayer(uuid: String!): RegistrationResponse
 }
 
 type Offensive {
@@ -63,4 +63,19 @@ type Player {
 type Query {
   player(uuid: String!): Player
   players: [Player]
+}
+
+type RegistrationError {
+  description: String
+  name: RegistrationErrorName
+}
+
+enum RegistrationErrorName {
+  ALREADY_REGISTERED
+  INVALID_UUID
+}
+
+type RegistrationResponse {
+  error: RegistrationError
+  player: Player
 }

@@ -1,4 +1,6 @@
+import { isUUID } from "class-validator";
 import {
+    enumType,
     list,
     mutationField,
     nonNull,
@@ -7,7 +9,6 @@ import {
     stringArg,
 } from "nexus";
 import { NexusGenObjects } from "../generated/nexus";
-import { ServerContext } from "../server-context";
 import { GameStats } from "./GameStats";
 
 type PlayerType = NexusGenObjects["Player"];
@@ -22,6 +23,29 @@ const Player = objectType({
         _.field("gameStats", {
             type: GameStats,
             resolve: ({ uuid }) => ({ playerUuid: uuid }),
+        });
+    },
+});
+
+const RegistrationResponse = objectType({
+    name: "RegistrationResponse",
+    definition(_) {
+        _.field("error", {
+            type: objectType({
+                name: "RegistrationError",
+                definition(_) {
+                    _.field("name", {
+                        type: enumType({
+                            name: "RegistrationErrorName",
+                            members: ["ALREADY_REGISTERED", "INVALID_UUID"],
+                        }),
+                    });
+                    _.string("description");
+                },
+            }),
+        });
+        _.field("player", {
+            type: Player,
         });
     },
 });
@@ -53,18 +77,32 @@ const players = queryField("players", {
 });
 
 const registerPlayer = mutationField("registerPlayer", {
-    type: Player,
+    type: RegistrationResponse,
     args: {
         uuid: nonNull(stringArg()),
     },
     resolve: async (_, { uuid }, { client }) => {
+        if (!isUUID(uuid, "4")) {
+            return {
+                error: {
+                    name: "INVALID_UUID",
+                    description: "The uuid field must be a valid UUIDv4.",
+                },
+            };
+        }
+
         const check = await client.query<PlayerType>(
             `SELECT 1 FROM "Player" WHERE uuid = $1`,
             [uuid]
         );
 
         if (check.rows.length > 0) {
-            return null;
+            return {
+                error: {
+                    name: "ALREADY_REGISTERED",
+                    description: "The player is already registered.",
+                },
+            };
         }
 
         const result = await client.query<PlayerType>(
@@ -72,8 +110,16 @@ const registerPlayer = mutationField("registerPlayer", {
             [uuid]
         );
 
-        return result.rows[0];
+        return {
+            player: result.rows[0],
+        };
     },
 });
 
-export const PlayerObject = [Player, registerPlayer, players, player];
+export const PlayerObject = [
+    Player,
+    registerPlayer,
+    players,
+    player,
+    RegistrationResponse,
+];

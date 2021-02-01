@@ -17,6 +17,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  RegistrationErrorName: "ALREADY_REGISTERED" | "INVALID_UUID"
 }
 
 export interface NexusGenScalars {
@@ -71,6 +72,14 @@ export interface NexusGenObjects {
     uuid?: string | null; // String
   }
   Query: {};
+  RegistrationError: { // root type
+    description?: string | null; // String
+    name?: NexusGenEnums['RegistrationErrorName'] | null; // RegistrationErrorName
+  }
+  RegistrationResponse: { // root type
+    error?: NexusGenRootTypes['RegistrationError'] | null; // RegistrationError
+    player?: NexusGenRootTypes['Player'] | null; // Player
+  }
 }
 
 export interface NexusGenInterfaces {
@@ -81,7 +90,7 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
   Defensive: { // field return type
@@ -108,7 +117,7 @@ export interface NexusGenFieldTypes {
     pit: NexusGenRootTypes['PitStats'] | null; // PitStats
   }
   Mutation: { // field return type
-    registerPlayer: NexusGenRootTypes['Player'] | null; // Player
+    registerPlayer: NexusGenRootTypes['RegistrationResponse'] | null; // RegistrationResponse
   }
   Offensive: { // field return type
     arrowsHit: number | null; // Int
@@ -139,6 +148,14 @@ export interface NexusGenFieldTypes {
     player: NexusGenRootTypes['Player'] | null; // Player
     players: Array<NexusGenRootTypes['Player'] | null> | null; // [Player]
   }
+  RegistrationError: { // field return type
+    description: string | null; // String
+    name: NexusGenEnums['RegistrationErrorName'] | null; // RegistrationErrorName
+  }
+  RegistrationResponse: { // field return type
+    error: NexusGenRootTypes['RegistrationError'] | null; // RegistrationError
+    player: NexusGenRootTypes['Player'] | null; // Player
+  }
 }
 
 export interface NexusGenFieldTypeNames {
@@ -166,7 +183,7 @@ export interface NexusGenFieldTypeNames {
     pit: 'PitStats'
   }
   Mutation: { // field return type name
-    registerPlayer: 'Player'
+    registerPlayer: 'RegistrationResponse'
   }
   Offensive: { // field return type name
     arrowsHit: 'Int'
@@ -197,6 +214,14 @@ export interface NexusGenFieldTypeNames {
     player: 'Player'
     players: 'Player'
   }
+  RegistrationError: { // field return type name
+    description: 'String'
+    name: 'RegistrationErrorName'
+  }
+  RegistrationResponse: { // field return type name
+    error: 'RegistrationError'
+    player: 'Player'
+  }
 }
 
 export interface NexusGenArgTypes {
@@ -222,7 +247,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = never;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = never;
 

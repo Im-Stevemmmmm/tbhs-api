@@ -5,5 +5,5 @@ export type ServerContext = {
     req: Request;
     res: Response;
     client: Client;
-    userRole?: "basic" | "admin";
+    userRole?: "generic" | "admin";
 };

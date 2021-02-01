@@ -4,12 +4,12 @@ import { isUUID } from "class-validator";
 import "dotenv/config";
 import express from "express";
 import { applyMiddleware } from "graphql-middleware";
-import { shield } from "graphql-shield";
+import { and, shield } from "graphql-shield";
 import { makeSchema } from "nexus";
 import path from "path";
 import { Client } from "pg";
 import uuidApiKey from "uuid-apikey";
-import { isAuthenticated } from "./authentication-rules";
+import { isAdminAuthenticated, isAuthenticated } from "./authentication-rules";
 import { GameStatsObject } from "./models/GameStats";
 import { PitStatsObject } from "./models/PitStats";
 import { PlayerObject } from "./models/Player";
@@ -41,7 +41,7 @@ const main = async () => {
             schema,
             shield({
                 Query: isAuthenticated,
-                Mutation: {},
+                Mutation: isAdminAuthenticated,
             })
         ),
         context: async ({ req, res }): Promise<ServerContext> => {
@@ -82,13 +82,18 @@ const main = async () => {
                 return argon.verify(row.key, apiKey);
             };
 
-            if (!(await checkKey("Generic"))) {
-                return (await checkKey("Admin"))
-                    ? { ...ctx, userRole: "admin" }
-                    : ctx;
+            const genericKeyCheck = await checkKey("Generic");
+
+            if (!genericKeyCheck) {
+                const adminKeyCheck = await checkKey("Admin");
+
+                return {
+                    ...ctx,
+                    userRole: adminKeyCheck ? "admin" : undefined,
+                };
             }
 
-            return { ...ctx, userRole: "basic" };
+            return { ...ctx, userRole: "generic" };
         },
     });
 
