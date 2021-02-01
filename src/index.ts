@@ -1,11 +1,17 @@
 import { ApolloServer } from "apollo-server-express";
+import argon from "argon2";
+import { isUUID } from "class-validator";
 import "dotenv/config";
 import express from "express";
+import { applyMiddleware } from "graphql-middleware";
+import { and, rule, shield } from "graphql-shield";
 import { makeSchema } from "nexus";
 import path from "path";
 import { Client } from "pg";
-import { PitStatsObject } from "./models/PitStats";
+import uuidApiKey from "uuid-apikey";
+import { isAuthenticated } from "./authentication-rules";
 import { GameStatsObject } from "./models/GameStats";
+import { PitStatsObject } from "./models/PitStats";
 import { PlayerObject } from "./models/Player";
 import { ServerContext } from "./server-context";
 
@@ -18,15 +24,72 @@ const main = async () => {
 
     const app = express();
 
+    const schema = makeSchema({
+        types: [PlayerObject, GameStatsObject, PitStatsObject],
+        outputs: {
+            schema: path.join(__dirname, "../src/generated/schema.graphql"),
+            typegen: path.join(__dirname, "../src/generated/nexus.ts"),
+        },
+        contextType: {
+            module: path.join(__dirname, "../src/server-context.ts"),
+            export: "ServerContext",
+        },
+    });
+
     const apolloServer = new ApolloServer({
-        schema: makeSchema({
-            types: [PlayerObject, GameStatsObject, PitStatsObject],
-            outputs: {
-                schema: path.join(__dirname, "../src/generated/schema.graphql"),
-                typegen: path.join(__dirname, "../src/generated/nexus.ts"),
-            },
-        }),
-        context: ({ req, res }): ServerContext => ({ req, res, client }),
+        schema: applyMiddleware(
+            schema,
+            shield({
+                Query: isAuthenticated,
+                Mutation: {},
+            })
+        ),
+        context: async ({ req, res }): Promise<ServerContext> => {
+            const ctx = { req, res, client };
+
+            const apiKeyHeader = req.headers["x-api-key"] as string;
+
+            if (!apiKeyHeader) {
+                return ctx;
+            }
+
+            const apiKey = apiKeyHeader.split(" ")[1];
+
+            let uuid: string;
+
+            try {
+                uuid = uuidApiKey.toUUID(apiKey);
+
+                if (!isUUID(uuid)) {
+                    return ctx;
+                }
+            } catch (err) {
+                return ctx;
+            }
+
+            const checkKey = async (table: "Generic" | "Admin") => {
+                const result = await client.query<{ key: string }>(
+                    `SELECT key FROM public."${table}ApiKey" WHERE uuid = $1`,
+                    [uuid]
+                );
+
+                const row = result.rows[0];
+
+                if (!row) {
+                    return false;
+                }
+
+                return argon.verify(row.key, apiKey);
+            };
+
+            if (!(await checkKey("Generic"))) {
+                return (await checkKey("Admin"))
+                    ? { ...ctx, userRole: "admin" }
+                    : ctx;
+            }
+
+            return { ...ctx, userRole: "basic" };
+        },
     });
 
     apolloServer.applyMiddleware({ app });

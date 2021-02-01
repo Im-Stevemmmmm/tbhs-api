@@ -6,13 +6,26 @@ type Defensive {
   bowDamageTaken: Float
   damageTaken: Float
   deaths: Int
+  id: Int
   meleeDamageTaken: Float
   playerUuid: String
 }
 
+type Farming {
+  fishSold: Int
+  fishedAnything: Int
+  fishedFish: Int
+  hayBalesSold: Int
+  id: Int
+  kingsQuestCompleted: Int
+  nightQuestsCompleted: Int
+  playerUuid: String
+  sewerTreasuresFound: Int
+  wheatFarmed: Int
+}
+
 type GameStats {
   pit: PitStats
-  playerUuid: String
 }
 
 type Mutation {
@@ -26,6 +39,7 @@ type Offensive {
   bowDamageDealt: Float
   damageDealt: Float
   highestStreak: Int
+  id: Int
   kills: Int
   meleeDamageDealt: Float
   playerUuid: String
@@ -34,8 +48,8 @@ type Offensive {
 
 type PitStats {
   defensive: Defensive
+  farming: Farming
   offensive: Offensive
-  playerUuid: String
 }
 
 type Player {

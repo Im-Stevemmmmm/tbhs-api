@@ -31,7 +31,7 @@ const player = queryField("player", {
     args: {
         uuid: nonNull(stringArg()),
     },
-    resolve: async (_, { uuid }, { client }: ServerContext) => {
+    resolve: async (_, { uuid }, { client }) => {
         const result = await client.query<PlayerType>(
             `SELECT * FROM public."Player" WHERE uuid = $1`,
             [uuid]
@@ -43,7 +43,7 @@ const player = queryField("player", {
 
 const players = queryField("players", {
     type: list(Player),
-    resolve: async (_, __, { client }: ServerContext) => {
+    resolve: async (_, __, { client }) => {
         const result = await client.query<PlayerType>(
             `SELECT * FROM public."Player"`
         );
@@ -57,7 +57,7 @@ const registerPlayer = mutationField("registerPlayer", {
     args: {
         uuid: nonNull(stringArg()),
     },
-    resolve: async (_, { uuid }, { client }: ServerContext) => {
+    resolve: async (_, { uuid }, { client }) => {
         const check = await client.query<PlayerType>(
             `SELECT 1 FROM "Player" WHERE uuid = $1`,
             [uuid]

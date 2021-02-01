@@ -4,7 +4,7 @@
  */
 
 
-
+import { ServerContext } from "./../server-context"
 
 
 
@@ -32,12 +32,23 @@ export interface NexusGenObjects {
     bowDamageTaken?: number | null; // Float
     damageTaken?: number | null; // Float
     deaths?: number | null; // Int
+    id?: number | null; // Int
     meleeDamageTaken?: number | null; // Float
     playerUuid?: string | null; // String
   }
-  GameStats: { // root type
+  Farming: { // root type
+    fishSold?: number | null; // Int
+    fishedAnything?: number | null; // Int
+    fishedFish?: number | null; // Int
+    hayBalesSold?: number | null; // Int
+    id?: number | null; // Int
+    kingsQuestCompleted?: number | null; // Int
+    nightQuestsCompleted?: number | null; // Int
     playerUuid?: string | null; // String
+    sewerTreasuresFound?: number | null; // Int
+    wheatFarmed?: number | null; // Int
   }
+  GameStats: { playerUuid: string };
   Mutation: {};
   Offensive: { // root type
     arrowsHit?: number | null; // Int
@@ -46,14 +57,13 @@ export interface NexusGenObjects {
     bowDamageDealt?: number | null; // Float
     damageDealt?: number | null; // Float
     highestStreak?: number | null; // Int
+    id?: number | null; // Int
     kills?: number | null; // Int
     meleeDamageDealt?: number | null; // Float
     playerUuid?: string | null; // String
     swordHits?: number | null; // Int
   }
-  PitStats: { // root type
-    playerUuid?: string | null; // String
-  }
+  PitStats: { playerUuid: string };
   Player: { // root type
     joinedAt?: string | null; // String
     lastJoin?: string | null; // String
@@ -78,12 +88,24 @@ export interface NexusGenFieldTypes {
     bowDamageTaken: number | null; // Float
     damageTaken: number | null; // Float
     deaths: number | null; // Int
+    id: number | null; // Int
     meleeDamageTaken: number | null; // Float
     playerUuid: string | null; // String
   }
+  Farming: { // field return type
+    fishSold: number | null; // Int
+    fishedAnything: number | null; // Int
+    fishedFish: number | null; // Int
+    hayBalesSold: number | null; // Int
+    id: number | null; // Int
+    kingsQuestCompleted: number | null; // Int
+    nightQuestsCompleted: number | null; // Int
+    playerUuid: string | null; // String
+    sewerTreasuresFound: number | null; // Int
+    wheatFarmed: number | null; // Int
+  }
   GameStats: { // field return type
     pit: NexusGenRootTypes['PitStats'] | null; // PitStats
-    playerUuid: string | null; // String
   }
   Mutation: { // field return type
     registerPlayer: NexusGenRootTypes['Player'] | null; // Player
@@ -95,6 +117,7 @@ export interface NexusGenFieldTypes {
     bowDamageDealt: number | null; // Float
     damageDealt: number | null; // Float
     highestStreak: number | null; // Int
+    id: number | null; // Int
     kills: number | null; // Int
     meleeDamageDealt: number | null; // Float
     playerUuid: string | null; // String
@@ -102,8 +125,8 @@ export interface NexusGenFieldTypes {
   }
   PitStats: { // field return type
     defensive: NexusGenRootTypes['Defensive'] | null; // Defensive
+    farming: NexusGenRootTypes['Farming'] | null; // Farming
     offensive: NexusGenRootTypes['Offensive'] | null; // Offensive
-    playerUuid: string | null; // String
   }
   Player: { // field return type
     gameStats: NexusGenRootTypes['GameStats'] | null; // GameStats
@@ -123,12 +146,24 @@ export interface NexusGenFieldTypeNames {
     bowDamageTaken: 'Float'
     damageTaken: 'Float'
     deaths: 'Int'
+    id: 'Int'
     meleeDamageTaken: 'Float'
     playerUuid: 'String'
   }
+  Farming: { // field return type name
+    fishSold: 'Int'
+    fishedAnything: 'Int'
+    fishedFish: 'Int'
+    hayBalesSold: 'Int'
+    id: 'Int'
+    kingsQuestCompleted: 'Int'
+    nightQuestsCompleted: 'Int'
+    playerUuid: 'String'
+    sewerTreasuresFound: 'Int'
+    wheatFarmed: 'Int'
+  }
   GameStats: { // field return type name
     pit: 'PitStats'
-    playerUuid: 'String'
   }
   Mutation: { // field return type name
     registerPlayer: 'Player'
@@ -140,6 +175,7 @@ export interface NexusGenFieldTypeNames {
     bowDamageDealt: 'Float'
     damageDealt: 'Float'
     highestStreak: 'Int'
+    id: 'Int'
     kills: 'Int'
     meleeDamageDealt: 'Float'
     playerUuid: 'String'
@@ -147,8 +183,8 @@ export interface NexusGenFieldTypeNames {
   }
   PitStats: { // field return type name
     defensive: 'Defensive'
+    farming: 'Farming'
     offensive: 'Offensive'
-    playerUuid: 'String'
   }
   Player: { // field return type name
     gameStats: 'GameStats'
@@ -207,7 +243,7 @@ export type NexusGenFeaturesConfig = {
 }
 
 export interface NexusGenTypes {
-  context: any;
+  context: ServerContext;
   inputTypes: NexusGenInputs;
   rootTypes: NexusGenRootTypes;
   inputTypeShapes: NexusGenInputs & NexusGenEnums & NexusGenScalars;
